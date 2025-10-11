@@ -20,6 +20,8 @@ btn.addEventListener("click", async () => {
   sourcesEl.innerHTML = "";
   srcWrap.open = false;
 
+  const t0 = performance.now(); // ⏱️ starttijd
+
   try {
     const resp = await fetch(API_URL, {
       method: "POST",
@@ -27,7 +29,11 @@ btn.addEventListener("click", async () => {
       body: JSON.stringify({ query, language: lang.value, topK: 5 })
     });
 
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    if (!resp.ok) {
+      const text = await resp.text().catch(() => "");
+      throw new Error(`HTTP ${resp.status}: ${text}`);
+    }
+
     const data = await resp.json();
     out.textContent = data.answer || "(Geen antwoord gevonden op basis van de documenten)";
     if (Array.isArray(data.sources) && data.sources.length > 0) {
@@ -38,10 +44,13 @@ btn.addEventListener("click", async () => {
       });
       srcWrap.open = false;
     }
-    statusEl.textContent = "Klaar.";
+
+    const dt = (performance.now() - t0) / 1000;
+    statusEl.textContent = `Klaar. (${dt.toFixed(1)} s)`;
   } catch (e) {
     console.error(e);
-    statusEl.textContent = "Er ging iets mis. Probeer later opnieuw.";
+    const dt = (performance.now() - t0) / 1000;
+    statusEl.textContent = `Er ging iets mis. Probeer later opnieuw. (${dt.toFixed(1)} s)`;
   } finally {
     btn.disabled = false;
   }
