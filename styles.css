@@ -1,5 +1,9 @@
 body { font-family: system-ui, Arial, sans-serif; margin:0; padding:0; background:#fafafa; }
 .container { max-width: 800px; margin: 40px auto; background:#fff; padding:24px; border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+
+/* NIEUW: container als referentiekader voor het logo */
+.container { position: relative; }
+
 label { display:block; font-weight:600; margin:16px 0 8px; }
 textarea, select { width:100%; padding:10px; font-size:16px; }
 button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
@@ -7,27 +11,36 @@ button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
 .output { white-space: pre-wrap; background:#f7f7f7; padding:16px; border-radius:8px; min-height:80px; }
 #srcWrap { margin-top: 16px; }
 
-/* Logo rechtsboven */
-.site-logo {
-  position: fixed;      /* blijft zichtbaar bij scrollen */
+/* ---- VERVANGT .site-logo: logo rechtsboven IN de container ---- */
+.card-logo {
+  position: absolute;   /* positioneer binnen .container */
   top: 12px;
   right: 12px;
-  z-index: 1000;
+  z-index: 2;
   display: inline-block;
   line-height: 0;       /* geen extra witruimte rondom de img */
 }
 
-.site-logo img {
+.card-logo img {
   display: block;
-  width: 56px;          /* pas eventueel aan */
-  height: 56px;         /* behoudt vierkante vorm */
+  width: 56px;
+  height: 56px;
   object-fit: contain;
+  background: #fff;     /* optioneel: wit vlakje */
+  border-radius: 8px;   /* optioneel: afgeronde hoeken */
+  box-shadow: 0 2px 6px rgba(0,0,0,.12); /* optioneel: subtiele schaduw */
+}
+
+/* voorkom overlap van de titel met het logo */
+.container > h1 {
+  margin-right: 88px;   /* ≈ 56 + 12 + 12 + wat speling */
 }
 
 /* iets kleiner op kleine schermen */
 @media (max-width: 480px) {
-  .site-logo img {
+  .card-logo img {
     width: 44px;
     height: 44px;
   }
+  .container > h1 { margin-right: 72px; }
 }
