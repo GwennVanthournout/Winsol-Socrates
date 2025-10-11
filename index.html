@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <title>Winsol Q&A</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+  <main class="container">
+    <h1>Winsol Q&A</h1>
+
+    <label for="lang">Taal</label>
+    <select id="lang">
+      <option>NL</option><option>FR</option><option>EN</option>
+      <option>DE</option><option>ES</option><option>IT</option>
+    </select>
+
+    <label for="q">Je vraag</label>
+    <textarea id="q" rows="6" placeholder="Stel hier je vraag..."></textarea>
+
+    <button id="btn">Zoeken</button>
+    <div id="status" class="status"></div>
+
+    <h2>Antwoord</h2>
+    <div id="out" class="output"></div>
+
+    <details id="srcWrap">
+      <summary>Bronnen</summary>
+      <ul id="sources"></ul>
+    </details>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

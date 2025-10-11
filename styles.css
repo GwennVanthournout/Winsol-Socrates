@@ -1,0 +1,8 @@
+body { font-family: system-ui, Arial, sans-serif; margin:0; padding:0; background:#fafafa; }
+.container { max-width: 800px; margin: 40px auto; background:#fff; padding:24px; border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+label { display:block; font-weight:600; margin:16px 0 8px; }
+textarea, select { width:100%; padding:10px; font-size:16px; }
+button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
+.status { margin-top:12px; color:#666; }
+.output { white-space: pre-wrap; background:#f7f7f7; padding:16px; border-radius:8px; min-height:80px; }
+#srcWrap { margin-top: 16px; }
