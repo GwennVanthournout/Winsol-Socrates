@@ -11,7 +11,6 @@ button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
 .output { white-space: pre-wrap; background:#f7f7f7; padding:16px; border-radius:8px; min-height:80px; }
 #srcWrap { margin-top: 16px; }
 
-/* ---- VERVANGT .site-logo: logo rechtsboven IN de container ---- */
 .card-logo {
   position: absolute;   /* positioneer binnen .container */
   top: 12px;
@@ -28,7 +27,7 @@ button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
   object-fit: contain;
   background: #fff;     /* optioneel: wit vlakje */
   border-radius: 8px;   /* optioneel: afgeronde hoeken */
-  box-shadow: 0 2px 6px rgba(0,0,0,.12); /* optioneel: subtiele schaduw */
+  /*box-shadow: 0 2px 6px rgba(0,0,0,.12); /* optioneel: subtiele schaduw */
 }
 
 /* voorkom overlap van de titel met het logo */
