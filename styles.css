@@ -6,3 +6,28 @@ button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
 .status { margin-top:12px; color:#666; }
 .output { white-space: pre-wrap; background:#f7f7f7; padding:16px; border-radius:8px; min-height:80px; }
 #srcWrap { margin-top: 16px; }
+
+/* Logo rechtsboven */
+.site-logo {
+  position: fixed;      /* blijft zichtbaar bij scrollen */
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: inline-block;
+  line-height: 0;       /* geen extra witruimte rondom de img */
+}
+
+.site-logo img {
+  display: block;
+  width: 56px;          /* pas eventueel aan */
+  height: 56px;         /* behoudt vierkante vorm */
+  object-fit: contain;
+}
+
+/* iets kleiner op kleine schermen */
+@media (max-width: 480px) {
+  .site-logo img {
+    width: 44px;
+    height: 44px;
+  }
+}
