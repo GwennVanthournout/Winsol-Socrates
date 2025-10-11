@@ -1,4 +1,4 @@
-https://winsol-socrates.gwenn-vanthournout.workers.dev/ask;
+const API_URL = "https://winsol-socrates.gwenn-vanthournout.workers.dev/ask";
 
 const lang = document.getElementById("lang");
 const q = document.getElementById("q");
