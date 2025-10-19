@@ -6,8 +6,8 @@ const q = document.getElementById("q");
 const btn = document.getElementById("btn");
 const out = document.getElementById("out");
 const statusEl = document.getElementById("status");
-const sourcesEl = document.getElementById("sources");   // <ul id="sources">
-const srcWrap = document.getElementById("srcWrap");     // <details id="srcWrap"><summary>Bronnen</summary>...</details>
+const sourcesEl = document.getElementById("sources");
+const srcWrap = document.getElementById("srcWrap");
 
 /* ---------- Helpers ---------- */
 
@@ -27,30 +27,20 @@ function renderSources(list) {
   // vul lijst
   for (const s of list) {
     const li = document.createElement("li");
-
-    // Basis: file_id
     let text = s.file_id ? String(s.file_id) : "source";
-
-    // Optioneel: pagina
     if (s.page !== null && s.page !== undefined) {
       text += ` (p.${s.page})`;
     }
-
-    // Optioneel: korte quote
     if (s.quote) {
       text += ` – “${s.quote}”`;
     }
-
     li.textContent = text;
     sourcesEl.appendChild(li);
   }
-
-  // bronnenpaneel standaard openzetten bij nieuwe resultaten
-  srcWrap.open = true;
+    srcWrap.open = true;
 }
 
 /* ---------- UI Events ---------- */
-
 btn.addEventListener("click", async () => {
   const query = q.value.trim();
   if (!query) {
@@ -82,7 +72,6 @@ btn.addEventListener("click", async () => {
       const text = await resp.text().catch(() => "");
       throw new Error(`HTTP ${resp.status}: ${text}`);
     }
-
     const data = await resp.json();
 
     // Twee kolommen wanneer secties aanwezig zijn
@@ -92,14 +81,8 @@ btn.addEventListener("click", async () => {
 
       out.innerHTML = `
         <div class="twoCol">
-          <section>
-            <h3>Commercial</h3>
-            <div>${commercial}</div>
-          </section>
-          <section>
-            <h3>Technical</h3>
-            <div>${technical}</div>
-          </section>
+          <section><h3>Commercial</h3><div>${commercial}</div></section>
+          <section><h3>Technical</h3><div>${technical}</div></section>
         </div>
       `;
     } else {
