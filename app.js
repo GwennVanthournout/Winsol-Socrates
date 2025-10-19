@@ -59,7 +59,7 @@ function renderSources(list) {
   // vul lijst
   for (const s of list) {
     const li = document.createElement("li");
-    let text = s.file_id ? String(s.file_id) : (s.filename || "source");
+    let text = s.filename || s.file_id || "source";
     if (s.page !== null && s.page !== undefined) text += ` (p.${s.page})`;
     if (s.quote) text += ` – “${s.quote}”`;
     li.textContent = text;
