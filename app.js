@@ -27,27 +27,76 @@ function renderSources(list) {
   // vul lijst
   for (const s of list) {
     const li = document.createElement("li");
-
     // Basis: file_id
     let text = s.file_id ? String(s.file_id) : "source";
-
     // Optioneel: pagina
     if (s.page !== null && s.page !== undefined) {
       text += ` (p.${s.page})`;
     }
-
     // Optioneel: korte quote
     if (s.quote) {
       text += ` – “${s.quote}”`;
     }
-
     li.textContent = text;
     sourcesEl.appendChild(li);
   }
-
   // bronnenpaneel standaard openzetten bij nieuwe resultaten
   srcWrap.open = true;
 }
+
+// Verwijder trailing "Bronnen:" of "Sources:" blok uit een sectie
+function stripInlineSourcesBlock(text) {
+  if (!text) return { clean: "", inlineSources: [] };
+
+  // 1) Knip een trailing blok dat begint met "Bronnen:" of "Sources:"
+  const cutRe = /(^|\n)(bron(?:nen)?|sources?)\s*:\s*[\s\S]*$/i;
+  const m = text.match(cutRe);
+  let clean = text;
+  let block = "";
+  if (m) {
+    block = text.slice(m.index).trim();
+    clean = text.slice(0, m.index).trim();
+  }
+
+  // 2) Parse bestandsnamen uit het blok (pdf/txt/docx)
+  const files = [];
+  if (block) {
+    const fileRe = /[A-Za-z0-9_().!\- ]+\.(pdf|txt|docx)/gi;
+    const seen = new Set();
+    let mk;
+    while ((mk = fileRe.exec(block)) !== null) {
+      const name = mk[0].trim();
+      if (!seen.has(name)) {
+        seen.add(name);
+        files.push({ file_id: name }); // we hebben geen file_id, dus toon naam
+      }
+    }
+  }
+
+  return { clean, inlineSources: files };
+}
+
+// Nette weergave van bronnen in je <details id="srcWrap"><ul id="sources">
+function renderSources(list) {
+  if (!srcWrap || !sourcesEl) return;
+  sourcesEl.innerHTML = "";
+
+  if (!Array.isArray(list) || list.length === 0) {
+    srcWrap.open = false;
+    return;
+  }
+
+  for (const s of list) {
+    const li = document.createElement("li");
+    let text = s.filename || s.file_id || "source";
+    if (s.page !== null && s.page !== undefined) text += ` (p.${s.page})`;
+    if (s.quote) text += ` – “${s.quote}”`;
+    li.textContent = text;
+    sourcesEl.appendChild(li);
+  }
+  srcWrap.open = true;
+}
+
 
 /* ---------- UI Events ---------- */
 
