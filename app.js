@@ -12,11 +12,11 @@ const srcWrap = document.getElementById("srcWrap");
 btn.addEventListener("click", async () => {
   const query = q.value.trim();
   if (!query) {
-    alert("Typ eerst een vraag.");
+    alert("First type a question.");
     return;
   }
   btn.disabled = true;
-  statusEl.textContent = "Bezig met zoeken…";
+  statusEl.textContent = "Searching...";
   out.textContent = "";
   sourcesEl.innerHTML = "";
   srcWrap.open = false;
@@ -56,7 +56,7 @@ btn.addEventListener("click", async () => {
           </div>
         `;
       } else {
-        out.textContent = data.answer || "(Geen antwoord gevonden op basis van de documenten)";
+        out.textContent = data.answer || "(No answer found based on the documents)";
       }  
     
     if (Array.isArray(data.sources) && data.sources.length > 0) {
@@ -69,11 +69,11 @@ btn.addEventListener("click", async () => {
     }
 
     const dt = (performance.now() - t0) / 1000;
-    statusEl.textContent = `Klaar. (${dt.toFixed(1)} s)`;
+    statusEl.textContent = `Done. (${dt.toFixed(1)} s)`;
   } catch (e) {
     console.error(e);
     const dt = (performance.now() - t0) / 1000;
-    statusEl.textContent = `Er ging iets mis. Probeer later opnieuw. (${dt.toFixed(1)} s)`;
+    statusEl.textContent = `Something went wrong. Please try again later. (${dt.toFixed(1)} s)`;
   } finally {
     btn.disabled = false;
   }
