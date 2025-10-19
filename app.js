@@ -1,6 +1,7 @@
 const API_URL = "https://winsol-socrates.gwenn-vanthournout.workers.dev/ask";
 
 const lang = document.getElementById("lang");
+const mode = document.getElementById("mode");
 const q = document.getElementById("q");
 const btn = document.getElementById("btn");
 const out = document.getElementById("out");
@@ -26,7 +27,7 @@ btn.addEventListener("click", async () => {
     const resp = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, language: lang.value, topK: 5 })
+      body: JSON.stringify({ query, language: lang.value, topK: 5, mode: mode.value })
     });
 
     if (!resp.ok) {
@@ -35,7 +36,24 @@ btn.addEventListener("click", async () => {
     }
 
     const data = await resp.json();
-    out.textContent = data.answer || "(Geen antwoord gevonden op basis van de documenten)";
+    
+    if (data.commercial || data.technical) {
+        out.innerHTML = `
+          <div class="twoCol">
+            <section>
+              <h3>Commercieel</h3>
+              <div>${data.commercial ? data.commercial : "—"}</div>
+            </section>
+            <section>
+              <h3>Technisch</h3>
+              <div>${data.technical ? data.technical : "—"}</div>
+            </section>
+          </div>
+        `;
+      } else {
+        out.textContent = data.answer || "(Geen antwoord gevonden op basis van de documenten)";
+      }  
+    
     if (Array.isArray(data.sources) && data.sources.length > 0) {
       data.sources.forEach(s => {
         const li = document.createElement("li");
