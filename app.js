@@ -46,11 +46,11 @@ btn.addEventListener("click", async () => {
         out.innerHTML = `
           <div class="twoCol">
             <section>
-              <h3>Commercieel</h3>
+              <h3>Commercial</h3>
               <div>${data.commercial ? data.commercial : "—"}</div>
             </section>
             <section>
-              <h3>Technisch</h3>
+              <h3>Technical</h3>
               <div>${data.technical ? data.technical : "—"}</div>
             </section>
           </div>
