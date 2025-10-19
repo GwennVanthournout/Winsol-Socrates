@@ -43,3 +43,18 @@ button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
   }
   .container > h1 { margin-right: 72px; }
 }
+
+/* twee kolommen voor Commercieel vs Technisch 19-10-2025 */
+.twoCol {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.twoCol section {
+  background: #f7f7f7;
+  padding: 16px;
+  border-radius: 8px;
+}
+.twoCol h3 {
+  margin: 0 0 8px 0;
+}
