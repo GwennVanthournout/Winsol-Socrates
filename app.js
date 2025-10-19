@@ -27,7 +27,12 @@ btn.addEventListener("click", async () => {
     const resp = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, language: lang.value, topK: 5, mode: mode.value })
+      body: JSON.stringify({
+        query,
+        language: lang.value,
+        topK: 5,
+        mode: document.getElementById("mode").value   // <-- belangrijk
+      })
     });
 
     if (!resp.ok) {
