@@ -1,81 +1,175 @@
 /* ===== Design tokens ===== */
-:root{
+:root {
   --surface:#ffffff;
   --border:#e5e5e9;
   --text:#111;
   --muted:#6b7280;
-  --brand:#2558ff;
+  --brand:#FFD500; /* Winsol-geel */
   --radius:12px;
 }
 
 /* ===== Basis layout ===== */
-html,body{ height:100%; }
-body{
+html,body { height:100%; }
+body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   background:#f7f7f8;
   color:var(--text);
   margin:0;
 }
-.container{ max-width: 980px; margin: 0 auto; padding: 16px; }
+.container { max-width: 980px; margin: 0 auto; padding: 16px; }
 
-/* ===== HERO (wit kader voor titel + logo) ===== */
-.hero{
+/* ===== HERO (titel + logo rechts in wit kader) ===== */
+.hero {
   display:grid;
   grid-template-columns: 1fr auto;
   align-items:center;
   gap: 16px;
-
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:18px 20px;
-  min-height:120px;               /* pas aan naar wens (bv. 140px) */
+  min-height:120px;
   box-shadow: 0 1px 0 rgba(0,0,0,.02);
   margin-bottom:14px;
 }
-.hero__title{
+.hero__title {
   font-size: clamp(22px, 2.6vw, 32px);
   line-height:1.2;
   margin:0;
 }
-.hero__logo{
-  justify-self:end;               
-  height:84px;                    /* logo-grootte; pas aan indien nodig */
+.hero__logo {
+  justify-self:end;
+  height:84px;
   width:auto;
   object-fit:contain;
 }
 
 /* ===== Toolbar ===== */
-.toolbar{
-  display:flex; gap:16px; align-items:end; justify-content:space-between;
+.toolbar {
+  display:flex;
+  gap:16px;
+  align-items:end;
+  justify-content:space-between;
   margin: 12px 0;
 }
-.fields{
-  display:grid; grid-template-columns: 1fr; gap:8px 16px; align-items:end;
+.fields {
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:8px 16px;
+  align-items:end;
 }
-.toolbar label{ margin:0; font-size:14px; color:#555; }
-.actions{ display:flex; gap:8px; }
+.toolbar label { margin:0; font-size:14px; color:#555; }
+.actions { display:flex; gap:8px; }
 
 /* ===== Chat ===== */
-.chat{
-  display:flex; flex-direction:column; gap:10px;
-  background:#fff; border:1px solid var(--border); border-radius:10px;
-  padding:12px; min-height:220px; max-height:52vh; overflow:auto;
+.chat {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  min-height:220px;
+  max-height:52vh;
+  overflow:auto;
 }
-.msg{ display:flex; }
-.msg.user{ justify-content:flex-end; }
-.msg.assistant{ justify-content:flex-start; }
-.bubble{
-  max-width:75%; padding:10px 12px; border-radius:12px; line-height:1.45;
-  background:#f1f3f5; color:#111; border-bottom-left-radius:4px;
+.msg { display:flex; }
+.msg.user { justify-content:flex-end; }
+.msg.assistant { justify-content:flex-start; }
+.bubble {
+  max-width:75%;
+  padding:10px 12px;
+  border-radius:12px;
+  line-height:1.45;
+  background:#f1f3f5;
+  color:#111;
+  border-bottom-left-radius:4px;
 }
-.msg.user .bubble{
-  background:var(--brand); color:#fff;
-  border-bottom-right-radius:4px; border-bottom-left-radius:12px;
+.msg.user .bubble {
+  background:var(--brand);
+  color:#111;
+  border-bottom-right-radius:4px;
+  border-bottom-left-radius:12px;
 }
-.sources{ font-size:12px; opacity:.75; margin-top:6px; }
+.sources { font-size:12px; opacity:.75; margin-top:6px; }
 
-/* ===== Composer & Controls (groter lettertype) ===== */
-.composer{ display:flex; gap:10px; margin-top:12px; }
-textarea, select, button{
+/* ===== Composer (groter veld + knop rechts) ===== */
+.composer {
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+  align-items:flex-end;
+}
+textarea, select, button {
   font-size:16px;
+}
+.composer textarea {
+  flex:1 1 100%;
+  resize:vertical;
+  min-height:48px;
+  max-height:180px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#fff;
+  color:var(--text);
+  width:100%;
+}
+button {
+  padding:10px 18px;
+  border:1px solid var(--brand);
+  border-radius:8px;
+  background:var(--brand);
+  color:#111;
+  cursor:pointer;
+  font-weight:600;
+}
+button.primary {
+  background:var(--brand);
+  color:#111;
+  border-color:var(--brand);
+}
+button:hover {
+  background:#ffde33; /* iets lichtere hover */
+}
+button:disabled {
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.status {
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+    justify-items:start;
+  }
+  .hero__logo {
+    justify-self:end;
+    height:64px;
+  }
+  .toolbar {
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .actions {
+    justify-content:flex-end;
+  }
+  .composer {
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .composer textarea {
+    width:100%;
+  }
+  button {
+    align-self:flex-end;
+    width:auto;
+  }
+}
