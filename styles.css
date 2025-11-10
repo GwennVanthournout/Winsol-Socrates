@@ -1,41 +1,103 @@
-/* Basis layout */
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f8; margin:0; }
-.container { max-width: 900px; margin: 0 auto; padding: 16px; }
-h1 { margin: 8px 0 12px; }
+/* ===== Basis layout ===== */
+:root{
+  --surface:#ffffff;
+  --border:#e5e5e9;
+  --text:#111;
+  --muted:#6b7280;
+  --brand:#2558ff;
+}
 
-.card-logo { display:inline-block; }
-.toolbar { display:flex; gap:16px; align-items:end; justify-content:space-between; margin: 12px 0; }
-.toolbar .fields { display:grid; grid-template-columns: 1fr; gap:8px 16px; align-items:end; }
-.toolbar label { margin:0; font-size:14px; color:#555; }
-.actions { display:flex; gap:8px; }
+html,body{ height:100%; }
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background:#f7f7f8;
+  color:var(--text);
+  margin:0;
+}
+.container{ max-width: 980px; margin: 0 auto; padding: 16px; }
 
-/* Chat */
-.chat {
+/* ===== HERO (wit kader voor titel + logo) ===== */
+.hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;   /* titel links, logo rechts */
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px 20px;
+  /* grootte in lijn met je rode illustratie */
+  min-height:120px;                /* verhoog/laag naar smaak (bv. 140px) */
+  box-shadow: 0 1px 0 rgba(0,0,0,.02);
+  margin-bottom:14px;
+}
+.hero__title{
+  font-size: clamp(20px, 2.3vw, 28px);
+  line-height:1.2;
+  margin:0;
+}
+.hero__logo{
+  display:block;
+  height:84px;                     /* logo-grootte; pas aan indien nodig */
+  width:auto;
+  object-fit:contain;
+}
+
+/* ===== Toolbar ===== */
+.toolbar{
+  display:flex; gap:16px; align-items:end; justify-content:space-between;
+  margin: 12px 0;
+}
+.fields{
+  display:grid; grid-template-columns: 1fr; gap:8px 16px; align-items:end;
+}
+.toolbar label{ margin:0; font-size:14px; color:#555; }
+.actions{ display:flex; gap:8px; }
+
+/* ===== Chat ===== */
+.chat{
   display:flex; flex-direction:column; gap:10px;
-  background:#fff; border:1px solid #e5e5e9; border-radius:10px;
+  background:#fff; border:1px solid var(--border); border-radius:10px;
   padding:12px; min-height:220px; max-height:52vh; overflow:auto;
 }
-.msg { display:flex; }
-.msg.user { justify-content:flex-end; }
-.msg.assistant { justify-content:flex-start; }
-
-.bubble {
+.msg{ display:flex; }
+.msg.user{ justify-content:flex-end; }
+.msg.assistant{ justify-content:flex-start; }
+.bubble{
   max-width:75%; padding:10px 12px; border-radius:12px; line-height:1.45;
   background:#f1f3f5; color:#111; border-bottom-left-radius:4px;
 }
-.msg.user .bubble {
-  background:#2558ff; color:#fff;
+.msg.user .bubble{
+  background:var(--brand); color:#fff;
   border-bottom-right-radius:4px; border-bottom-left-radius:12px;
 }
+.sources{ font-size:12px; opacity:.75; margin-top:6px; }
 
-.sources { font-size:12px; opacity:.75; margin-top:6px; }
+/* ===== Composer & Controls (groter lettertype) ===== */
+.composer{ display:flex; gap:10px; margin-top:12px; }
+textarea, select, button{
+  font-size:16px;                  /* <— grotere leesbaarheid */
+}
+.composer textarea{
+  flex:1; resize:vertical; min-height:48px; max-height:180px;
+  padding:10px; border:1px solid var(--border); border-radius:8px;
+  background:#fff; color:var(--text);
+}
+select{
+  padding:8px 10px; border:1px solid var(--border); border-radius:8px;
+  background:#fff;
+}
+button{
+  padding:10px 14px; border:1px solid #d0d0d6; border-radius:8px; background:#fff; cursor:pointer;
+}
+button.primary{ background:var(--brand); color:#fff; border-color:var(--brand); }
+button:disabled{ opacity:.6; cursor:not-allowed; }
 
-/* Composer */
-.composer { display:flex; gap:10px; margin-top:12px; }
-.composer textarea { flex:1; resize:vertical; min-height:42px; max-height:160px; }
+.status{ font-size:12px; color:var(--muted); margin-top:6px; }
 
-button { padding:10px 14px; border:1px solid #d0d0d6; border-radius:8px; background:#fff; cursor:pointer; }
-button.primary { background:#2558ff; color:#fff; border-color:#2558ff; }
-button:disabled { opacity:.6; cursor:not-allowed; }
-
-.status { font-size:12px; color:#6b7280; margin-top:6px; }
+/* ===== Responsive (kleine schermen) ===== */
+@media (max-width: 640px){
+  .hero{ gap:12px; padding:14px; }
+  .hero__logo{ height:64px; }
+  .toolbar{ flex-direction:column; align-items:stretch; }
+  .actions{ justify-content:flex-end; }
+}
