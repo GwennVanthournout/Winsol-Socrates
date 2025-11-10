@@ -1,3 +1,5 @@
+// app.js
+// Zet dit naar je Worker endpoint:
 const API_URL = "https://winsol-socrates.gwenn-vanthournout.workers.dev/ask";
 
 const chat = document.getElementById("chat");
@@ -66,8 +68,45 @@ const translations = {
     ready: "Pronto",
     failed: "Non riuscito",
   },
+  cs: { // Tsjechisch
+    language: "Jazyk",
+    reset: "Resetovat",
+    send: "Odeslat",
+    placeholder: "Zadejte svou otázku… (Shift+Enter = nový řádek)",
+    greeting: "Dobrý den! Odpovídám na technické otázky na základě připojené dokumentace. Co byste chtěli vědět?",
+    ready: "Hotovo",
+    failed: "Selhalo",
+  },
+  sv: { // Zweeds
+    language: "Språk",
+    reset: "Återställ",
+    send: "Skicka",
+    placeholder: "Skriv din fråga… (Skift+Enter = ny rad)",
+    greeting: "Hej! Jag svarar på tekniska frågor baserat på den länkade dokumentationen. Vad vill du veta?",
+    ready: "Klar",
+    failed: "Misslyckades",
+  },
+  hr: { // Kroatisch
+    language: "Jezik",
+    reset: "Poništi",
+    send: "Pošalji",
+    placeholder: "Upišite svoje pitanje… (Shift+Enter = novi red)",
+    greeting: "Pozdrav! Odgovaram na tehnička pitanja temeljena na povezanoj dokumentaciji. Što želite znati?",
+    ready: "Gotovo",
+    failed: "Neuspjelo",
+  },
+  hu: { // Hongaars
+    language: "Nyelv",
+    reset: "Visszaállítás",
+    send: "Küldés",
+    placeholder: "Írd be a kérdésed… (Shift+Enter = új sor)",
+    greeting: "Helló! A kapcsolt dokumentáció alapján válaszolok műszaki kérdésekre. Mit szeretnél tudni?",
+    ready: "Kész",
+    failed: "Sikertelen",
+  },
 };
 
+/* ========= Language logic ========= */
 function detectBrowserLang() {
   const list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "nl"];
   for (const l of list) {
@@ -90,8 +129,6 @@ function applyUIStrings() {
   if (langLabel) langLabel.textContent = tt.language;
   if (resetBtn) resetBtn.textContent = tt.reset;
   if (sendBtn) sendBtn.textContent = tt.send;
-
-  // placeholder alleen overschrijven als het leeg of standaard is
   if (input) input.placeholder = tt.placeholder;
 }
 
@@ -149,7 +186,7 @@ async function send() {
 
   const body = {
     query: q,
-    language: currentLangCode(),     // ← meegeven aan Worker
+    language: currentLangCode(),
     threadId: getThreadId(),
   };
 
@@ -197,9 +234,7 @@ input.addEventListener("keydown", (e) => {
   }
 });
 langSelect.addEventListener("change", () => {
-  // Als user taal handmatig verandert, pas labels + placeholder direct aan
   applyUIStrings();
-  // Ook de greeting vernieuwen als het gesprek leeg is
   if (!chat.querySelector(".msg.user")) {
     chat.innerHTML = "";
     renderMessage("assistant", sanitize(t().greeting));
