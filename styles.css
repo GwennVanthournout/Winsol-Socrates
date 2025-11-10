@@ -1,132 +1,41 @@
-body { font-family: system-ui, Arial, sans-serif; margin:0; padding:0; background:#fafafa; }
-.container { max-width: 800px; margin: 40px auto; background:#fff; padding:24px; border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+/* Basis layout */
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f8; margin:0; }
+.container { max-width: 900px; margin: 0 auto; padding: 16px; }
+h1 { margin: 8px 0 12px; }
 
-/* NIEUW: container als referentiekader voor het logo */
-.container { position: relative; }
+.card-logo { display:inline-block; }
+.toolbar { display:flex; gap:16px; align-items:end; justify-content:space-between; margin: 12px 0; }
+.toolbar .fields { display:grid; grid-template-columns: 1fr; gap:8px 16px; align-items:end; }
+.toolbar label { margin:0; font-size:14px; color:#555; }
+.actions { display:flex; gap:8px; }
 
-label { display:block; font-weight:600; margin:16px 0 8px; }
-textarea, select { width:100%; padding:10px; font-size:16px; }
-button { margin-top:16px; padding:10px 16px; font-size:16px; cursor:pointer; }
-.status { margin-top:12px; color:#666; }
-.output { white-space: pre-wrap; background:#f7f7f7; padding:16px; border-radius:8px; min-height:80px; }
-#srcWrap { margin-top: 16px; }
-
-.card-logo {
-  position: absolute;   /* positioneer binnen .container */
-  top: 12px;
-  right: 12px;
-  z-index: 2;
-  display: inline-block;
-  line-height: 0;       /* geen extra witruimte rondom de img */
-}
-
-.card-logo img {
-  display: block;
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  background: #fff;     /* optioneel: wit vlakje */
-  border-radius: 8px;   /* optioneel: afgeronde hoeken */
-  /*box-shadow: 0 2px 6px rgba(0,0,0,.12); /* optioneel: subtiele schaduw */
-}
-
-/* voorkom overlap van de titel met het logo */
-.container > h1 {
-  margin-right: 88px;   /* ≈ 56 + 12 + 12 + wat speling */
-}
-
-/* iets kleiner op kleine schermen */
-@media (max-width: 480px) {
-  .card-logo img {
-    width: 44px;
-    height: 44px;
-  }
-  .container > h1 { margin-right: 72px; }
-}
-
-/* twee kolommen voor Commercieel vs Technisch 19-10-2025 */
-.twoCol {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-.twoCol section {
-  background: #f7f7f7;
-  padding: 16px;
-  border-radius: 8px;
-}
-.twoCol h3 {
-  margin: 0 0 8px 0;
-}
-
-/* ===== Chat UI add-on ===== */
-.toolbar {
-  display: flex;
-  gap: 16px;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin: 12px 0 8px;
-}
-.toolbar .fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-  align-items: end;
-}
-.toolbar .fields label { margin: 0; }
-.toolbar .actions { display: flex; gap: 8px; }
-
+/* Chat */
 .chat {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid #e5e5e9;
-  border-radius: 10px;
-  padding: 12px;
-  min-height: 220px;
-  max-height: 52vh;
-  overflow: auto;
+  display:flex; flex-direction:column; gap:10px;
+  background:#fff; border:1px solid #e5e5e9; border-radius:10px;
+  padding:12px; min-height:220px; max-height:52vh; overflow:auto;
 }
-
-.msg { display: flex; }
-.msg.user { justify-content: flex-end; }
-.msg.assistant { justify-content: flex-start; }
+.msg { display:flex; }
+.msg.user { justify-content:flex-end; }
+.msg.assistant { justify-content:flex-start; }
 
 .bubble {
-  max-width: 75%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  line-height: 1.45;
-  background: #f1f3f5;
-  color: #111;
-  border-bottom-left-radius: 4px;
+  max-width:75%; padding:10px 12px; border-radius:12px; line-height:1.45;
+  background:#f1f3f5; color:#111; border-bottom-left-radius:4px;
 }
 .msg.user .bubble {
-  background: #2558ff;
-  color: #fff;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 12px;
-}
-.msg .sources {
-  font-size: 12px;
-  opacity: .75;
-  margin-top: 6px;
+  background:#2558ff; color:#fff;
+  border-bottom-right-radius:4px; border-bottom-left-radius:12px;
 }
 
-.composer {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-.composer textarea {
-  flex: 1;
-  resize: vertical;
-  min-height: 42px;
-  max-height: 160px;
-}
-button.primary { background:#2558ff; color:#fff; border:1px solid #2558ff; }
-button:disabled { opacity: .6; cursor: not-allowed; }
+.sources { font-size:12px; opacity:.75; margin-top:6px; }
 
-/* twoCol bestaat al in jouw CSS; we hergebruiken die in elke assistant-bubble */
-.bubble .twoCol section { background: #ffffff; }
+/* Composer */
+.composer { display:flex; gap:10px; margin-top:12px; }
+.composer textarea { flex:1; resize:vertical; min-height:42px; max-height:160px; }
+
+button { padding:10px 14px; border:1px solid #d0d0d6; border-radius:8px; background:#fff; cursor:pointer; }
+button.primary { background:#2558ff; color:#fff; border-color:#2558ff; }
+button:disabled { opacity:.6; cursor:not-allowed; }
+
+.status { font-size:12px; color:#6b7280; margin-top:6px; }
