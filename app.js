@@ -1,6 +1,4 @@
-// app.js
-// Pas desnoods aan naar je volledige Worker-URL:
-const API_URL = "/ask";
+const API_URL = "https://winsol-socrates.gwenn-vanthournout.workers.dev/ask"
 
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
