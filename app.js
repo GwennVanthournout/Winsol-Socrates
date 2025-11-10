@@ -9,6 +9,7 @@ const resetBtn = document.getElementById("resetBtn");
 const statusEl = document.getElementById("status");
 const langSelect = document.getElementById("lang");
 const langLabel = document.getElementById("langLabel");
+const loadingIndicator = document.getElementById("loadingIndicator");:
 
 let pending = false;
 
@@ -131,6 +132,13 @@ function applyUIStrings() {
   if (sendBtn) sendBtn.textContent = tt.send;
   if (input) input.placeholder = tt.placeholder;
 }
+function showLoadingIndicator() {
+  loadingIndicator.classList.add("active");
+}
+
+function hideLoadingIndicator() {
+  loadingIndicator.classList.remove("active");
+}
 
 /* ========= Conversation state ========= */
 function getThreadId() { return sessionStorage.getItem("threadId") || ""; }
@@ -182,6 +190,7 @@ async function send() {
   const tt = t();
   setBusy(true);
   statusEl.textContent = "…";
+  showLoadingIndicator();
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
 
   const body = {
@@ -213,6 +222,7 @@ async function send() {
   } finally {
     input.value = "";
     input.focus();
+    hideLoadingIndicator();
     setBusy(false);
   }
 }
