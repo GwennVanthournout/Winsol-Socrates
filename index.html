@@ -8,46 +8,52 @@
 </head>
 <body>
 
-  <main class="container">
-    <a class="card-logo" href="#" aria-label="Winsol SO!Crates home">
-      <img src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" width="150" height="150" />
-    </a>
-    
-    <h1>Winsol SO!Crates</h1>
+<main class="container">
+  <a class="card-logo" href="#" aria-label="Winsol SO!Crates home">
+    <img src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" width="150" height="150" />
+  </a>
 
-    <label for="lang">Language</label>
-    <select id="lang">
-      <option value="auto" selected>Automatic</option>
-      <option value="nl">Nederlands</option>
-      <option value="fr">Français</option>
-      <option value="en">English</option>
-      <option value="de">Deutsch</option>
-      <option value="es">Español</option>
-      <option value="it">Italiano</option>
-    </select>
+  <h1>Winsol SO!Crates Bot_B1</h1>
 
-    <!-- type antwoord 19-10-25 -->
-    <label for="mode">Type</label>
-    <select id="mode">
-      <option value="auto" selected>Automatic</option>
-      <option value="commercieel">Commercial</option>
-      <option value="technisch">Technical</option>
-    </select>
+  <div class="toolbar">
+    <div class="fields">
+      <label for="lang">Language</label>
+      <select id="lang">
+        <option value="auto" selected>Automatic</option>
+        <option value="nl">Nederlands</option>
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="es">Español</option>
+        <option value="it">Italiano</option>
+      </select>
 
-    <label for="q">Your Question</label>
-    <textarea id="q" rows="6" placeholder="Ask your question here..."></textarea>
+      <label for="mode">Type</label>
+      <select id="mode">
+        <option value="auto" selected>Automatic</option>
+        <option value="commercieel">Commercial</option>
+        <option value="technisch">Technical</option>
+      </select>
+    </div>
 
-    <button id="btn">Search</button>
-    <div id="status" class="status"></div>
+    <div class="actions">
+      <button id="resetBtn" title="Start new conversation">Reset</button>
+    </div>
+  </div>
 
-    <h2>Answer</h2>
-    <div id="out" class="output"></div>
+  <!-- CHAT THREAD -->
+  <div id="chat" class="chat" aria-live="polite"></div>
 
-    <details id="srcWrap">
-      <summary>Sources</summary>
-      <ul id="sources"></ul>
-    </details>
-  </main>
+  <!-- COMPOSER -->
+  <div class="composer">
+    <textarea id="input" rows="3" placeholder="Typ je vraag… (Shift+Enter = nieuwe regel)"></textarea>
+    <button id="sendBtn" class="primary">Verstuur</button>
+  </div>
+
+  <div id="status" class="status"></div>
+</main>
+<script src="app.js" type="module"></script>
+
   <script src="app.js"></script>
 </body>
 </html>
