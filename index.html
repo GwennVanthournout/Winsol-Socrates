@@ -1,59 +1,50 @@
 <!doctype html>
 <html lang="nl">
-<head>
-  <meta charset="utf-8" />
-  <title>Winsol SO!Crates</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="styles.css" rel="stylesheet" />
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Winsol SO!Crates Bot_V0.1</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <a class="card-logo" href="#" aria-label="Winsol SO!Crates">
+        <img src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" width="150" height="150" />
+      </a>
 
-<main class="container">
-  <a class="card-logo" href="#" aria-label="Winsol SO!Crates home">
-    <img src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" width="150" height="150" />
-  </a>
+      <h1>Winsol SO!Crates Bot_V0.1</h1>
 
-  <h1>Winsol SO!Crates Bot_V0.1</h1>
+      <div class="toolbar">
+        <div class="fields">
+          <label for="lang">Language</label>
+          <select id="lang">
+            <option value="auto" selected>Automatic</option>
+            <option value="nl">Nederlands</option>
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="it">Italiano</option>
+          </select>
+        </div>
 
-  <div class="toolbar">
-    <div class="fields">
-      <label for="lang">Language</label>
-      <select id="lang">
-        <option value="auto" selected>Automatic</option>
-        <option value="nl">Nederlands</option>
-        <option value="fr">Français</option>
-        <option value="en">English</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Español</option>
-        <option value="it">Italiano</option>
-      </select>
+        <div class="actions">
+          <button id="resetBtn" title="Nieuwe conversatie">Reset</button>
+        </div>
+      </div>
 
-      <label for="mode">Type</label>
-      <select id="mode">
-        <option value="auto" selected>Automatic</option>
-        <option value="commercieel">Commercial</option>
-        <option value="technisch">Technical</option>
-      </select>
-    </div>
+      <!-- CHAT -->
+      <div id="chat" class="chat" aria-live="polite"></div>
 
-    <div class="actions">
-      <button id="resetBtn" title="Start new conversation">Reset</button>
-    </div>
-  </div>
+      <!-- COMPOSER -->
+      <div class="composer">
+        <textarea id="input" rows="3" placeholder="Typ je vraag… (Shift+Enter = nieuwe regel)"></textarea>
+        <button id="sendBtn" class="primary">Verstuur</button>
+      </div>
 
-  <!-- CHAT THREAD -->
-  <div id="chat" class="chat" aria-live="polite"></div>
+      <div id="status" class="status"></div>
+    </main>
 
-  <!-- COMPOSER -->
-  <div class="composer">
-    <textarea id="input" rows="3" placeholder="Typ je vraag… (Shift+Enter = nieuwe regel)"></textarea>
-    <button id="sendBtn" class="primary">Verstuur</button>
-  </div>
-
-  <div id="status" class="status"></div>
-</main>
-<script src="app.js" type="module"></script>
-
-  <script src="app.js"></script>
-</body>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
