@@ -99,7 +99,7 @@ function resetConversation() {
   if (pending) return;
   clearThread();
   chat.innerHTML = "";
-  renderMessage("assistant", "Nieuwe conversatie gestart. Stel je vraag maar!");
+  renderMessage("assistant", "New conversation started. Ask your question!");
 }
 
 /* ===== Events ===== */
@@ -113,4 +113,4 @@ input.addEventListener("keydown", (e) => {
 });
 
 /* ===== Boot ===== */
-renderMessage("assistant", "Hallo! Ik beantwoord technische vragen op basis van de gekoppelde documentatie. Wat wil je weten?");
+renderMessage("assistant", "Hello! I answer technical questions based on the linked documentation. What would you like to know?");
