@@ -1,30 +1,26 @@
-const API_URL = "https://winsol-socrates.gwenn-vanthournout.workers.dev/ask"; // ongewijzigd
+// app.js
+// Pas desnoods aan naar je volledige Worker-URL:
+const API_URL = "/ask";
 
-// UI refs
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 const resetBtn = document.getElementById("resetBtn");
 const statusEl = document.getElementById("status");
 const lang = document.getElementById("lang");
-const mode = document.getElementById("mode");
 
-/* ========= Conversation state ========= */
-function getThreadId() {
-  return sessionStorage.getItem("threadId") || "";
-}
-function setThreadId(id) {
-  if (id) sessionStorage.setItem("threadId", id);
-}
-function clearThread() {
-  sessionStorage.removeItem("threadId");
-}
+let pending = false; // voorkomt dubbel versturen
 
-/* ========= Rendering ========= */
+/* ===== Conversation state ===== */
+function getThreadId() { return sessionStorage.getItem("threadId") || ""; }
+function setThreadId(id) { if (id) sessionStorage.setItem("threadId", id); }
+function clearThread() { sessionStorage.removeItem("threadId"); }
+
+/* ===== Rendering ===== */
 function sanitize(str = "") {
-  return String(str).replace(/[&<>"']/g, ch => ({
+  return String(str).replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[ch]));
+  })[ch]);
 }
 
 function renderMessage(role, html, sources = []) {
@@ -35,16 +31,15 @@ function renderMessage(role, html, sources = []) {
   bubble.className = "bubble";
   bubble.innerHTML = html;
 
-  // bronnen (per bericht)
   if (Array.isArray(sources) && sources.length) {
-    const src = document.createElement("div");
-    src.className = "sources";
-    src.textContent = "Bronnen: " + sources.map(s => {
-      let label = s.filename || s.file_id || "source";
-      if (s.page !== undefined && s.page !== null) label += ` (p.${s.page})`;
+    const s = document.createElement("div");
+    s.className = "sources";
+    s.textContent = "Bronnen: " + sources.map((x) => {
+      let label = x.filename || x.file_id || "bron";
+      if (x.page !== undefined && x.page !== null) label += ` (p.${x.page})`;
       return label;
     }).join(" · ");
-    bubble.appendChild(src);
+    bubble.appendChild(s);
   }
 
   wrap.appendChild(bubble);
@@ -52,66 +47,49 @@ function renderMessage(role, html, sources = []) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function formatAssistantAnswer(data) {
-  // Hergebruik jouw twoCol weergave (bestaat al in CSS)
-  const comm = (data.commercial || "").trim();
-  const tech = (data.technical || "").trim();
-
-  if (comm || tech) {
-    return `
-      <div class="twoCol">
-        <section><h3>Commercial</h3><div>${sanitize(comm || "—").replace(/\n/g, "<br>")}</div></section>
-        <section><h3>Technical</h3><div>${sanitize(tech || "—").replace(/\n/g, "<br>")}</div></section>
-      </div>
-    `;
-  }
-  // fallback: platte tekst
-  const plain = (data.answer || "(No answer found based on the documents)");
-  return sanitize(plain).replace(/\n/g, "<br>");
+function setBusy(on) {
+  pending = on;
+  sendBtn.disabled = on;
+  resetBtn.disabled = on;
+  input.disabled = on;
 }
 
-/* ========= Send & Reset ========= */
+/* ===== Actions ===== */
 async function send() {
-  const query = (input.value || "").trim();
-  if (!query) return;
+  if (pending) return; // guard tegen dubbelklik
+  const q = (input.value || "").trim();
+  if (!q) return;
 
   setBusy(true);
   statusEl.textContent = "Bezig…";
-
-  // toon eerst je eigen bericht
-  renderMessage("user", sanitize(query).replace(/\n/g, "<br>"));
+  renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
 
   const body = {
-    query,
-    language: lang ? (lang.value || "auto") : "auto",
-    mode: mode ? (mode.value || "auto") : "auto",
-    threadId: getThreadId(), // behoud conversatie-context
+    query: q,
+    language: (lang && lang.value) || "auto",
+    threadId: getThreadId(),
   };
 
   const t0 = performance.now();
   try {
-    const resp = await fetch(API_URL, {
+    const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!resp.ok) {
-      const text = await resp.text().catch(() => "");
-      throw new Error(`HTTP ${resp.status}: ${text}`);
-    }
-    const data = await resp.json();
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
     if (data.threadId) setThreadId(data.threadId);
 
-    const html = formatAssistantAnswer(data);
-    const sources = Array.isArray(data.sources) ? data.sources : [];
-    renderMessage("assistant", html, sources);
+    const text = (data.answer || "—").trim();
+    const html = sanitize(text).replace(/\n/g, "<br>");
+    renderMessage("assistant", html, data.sources || []);
 
-    const dt = (performance.now() - t0) / 1000;
-    statusEl.textContent = `Klaar (${dt.toFixed(1)} s)`;
+    statusEl.textContent = `Klaar (${((performance.now() - t0) / 1000).toFixed(1)} s)`;
   } catch (e) {
     renderMessage("assistant", sanitize(`Fout: ${e?.message || e}`));
-    const dt = (performance.now() - t0) / 1000;
-    statusEl.textContent = `Mislukt (${dt.toFixed(1)} s)`;
+    statusEl.textContent = "Mislukt";
   } finally {
     input.value = "";
     input.focus();
@@ -120,18 +98,13 @@ async function send() {
 }
 
 function resetConversation() {
+  if (pending) return;
   clearThread();
   chat.innerHTML = "";
   renderMessage("assistant", "Nieuwe conversatie gestart. Stel je vraag maar!");
 }
 
-function setBusy(on) {
-  sendBtn.disabled = on;
-  resetBtn.disabled = on;
-  input.disabled = on;
-}
-
-/* ========= Events ========= */
+/* ===== Events ===== */
 sendBtn.addEventListener("click", send);
 resetBtn.addEventListener("click", resetConversation);
 input.addEventListener("keydown", (e) => {
@@ -141,5 +114,5 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
-/* ========= Boot ========= */
-renderMessage("assistant", "Hallo! Ik beantwoord vragen op basis van de gekoppelde documentatie. Wat wil je weten?");
+/* ===== Boot ===== */
+renderMessage("assistant", "Hallo! Ik beantwoord technische vragen op basis van de gekoppelde documentatie. Wat wil je weten?");
