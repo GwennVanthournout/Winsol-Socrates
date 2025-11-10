@@ -9,7 +9,7 @@ const resetBtn = document.getElementById("resetBtn");
 const statusEl = document.getElementById("status");
 const langSelect = document.getElementById("lang");
 const langLabel = document.getElementById("langLabel");
-const loadingIndicator = document.getElementById("loadingIndicator");:
+const loadingIndicator = document.getElementById("loadingIndicator");
 
 let pending = false;
 
