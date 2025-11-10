@@ -39,7 +39,7 @@ body {
 }
 .hero__logo {
   justify-self:end;
-  height:84px;
+  height:120px;
   width:auto;
   object-fit:contain;
 }
@@ -94,7 +94,7 @@ body {
 }
 .sources { font-size:12px; opacity:.75; margin-top:6px; }
 
-/* ===== Composer (groter veld + knop rechts) ===== */
+/* ===== Composer ===== */
 .composer {
   display:flex;
   gap:10px;
