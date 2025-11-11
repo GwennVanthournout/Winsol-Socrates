@@ -143,7 +143,7 @@ function sanitize(str = "") {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   })[ch]);
 }
-function renderMessage(role, html, sources = []) {
+function renderMessage(role, html) {
   const wrap = document.createElement("div");
   wrap.className = `msg ${role}`;
 
@@ -228,7 +228,7 @@ async function send() {
 
     const text = (data.answer || "—").trim();
     const html = sanitize(text).replace(/\n/g, "<br>");
-    renderMessage("assistant", html, data.sources || []);
+    renderMessage("assistant", html);
 
     statusEl.textContent = `${tt.ready} (${((performance.now() - t0) / 1000).toFixed(1)} s)`;
   } catch (e) {
