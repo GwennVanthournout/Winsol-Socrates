@@ -151,17 +151,6 @@ function renderMessage(role, html) {
   bubble.className = "bubble";
   bubble.innerHTML = html;
 
-  if (Array.isArray(sources) && sources.length) {
-    const s = document.createElement("div");
-    s.className = "sources";
-    s.textContent = "Bronnen: " + sources.map((x) => {
-      let label = x.filename || x.file_id || "bron";
-      if (x.page !== undefined && x.page !== null) label += ` (p.${x.page})`;
-      return label;
-    }).join(" · ");
-    bubble.appendChild(s);
-  }
-
   wrap.appendChild(bubble);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
