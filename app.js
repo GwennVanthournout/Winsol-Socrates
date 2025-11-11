@@ -14,96 +14,46 @@ let pending = false;
 
 /* ========= Translations ========= */
 const translations = {
-  nl: {
-    language: "Taal",
-    reset: "Reset",
-    send: "Verstuur",
+  nl: { language: "Taal", reset: "Reset", send: "Verstuur",
     placeholder: "Typ je vraag… (Shift+Enter = nieuwe regel)",
     greeting: "Hallo! Ik beantwoord technische vragen op basis van de gekoppelde documentatie. Wat wil je weten?",
-    ready: "Klaar",
-    failed: "Mislukt",
-  },
-  fr: {
-    language: "Langue",
-    reset: "Réinitialiser",
-    send: "Envoyer",
+    ready: "Klaar", failed: "Mislukt" },
+  fr: { language: "Langue", reset: "Réinitialiser", send: "Envoyer",
     placeholder: "Tapez votre question… (Maj+Entrée = nouvelle ligne)",
     greeting: "Bonjour ! Je réponds aux questions techniques basées sur la documentation liée. Que souhaitez-vous savoir ?",
-    ready: "Terminé",
-    failed: "Échec",
-  },
-  en: {
-    language: "Language",
-    reset: "Reset",
-    send: "Send",
+    ready: "Terminé", failed: "Échec" },
+  en: { language: "Language", reset: "Reset", send: "Send",
     placeholder: "Type your question... (Shift+Enter = new line)",
     greeting: "Hello! I answer technical questions based on the linked documentation. What would you like to know?",
-    ready: "Ready",
-    failed: "Failed",
-  },
-  de: {
-    language: "Sprache",
-    reset: "Zurücksetzen",
-    send: "Senden",
+    ready: "Ready", failed: "Failed" },
+  de: { language: "Sprache", reset: "Zurücksetzen", send: "Senden",
     placeholder: "Gib deine Frage ein… (Umschalt+Enter = neue Zeile)",
     greeting: "Hallo! Ich beantworte technische Fragen auf Grundlage der verknüpften Dokumentation. Was möchtest du wissen?",
-    ready: "Fertig",
-    failed: "Fehlgeschlagen",
-  },
-  es: {
-    language: "Idioma",
-    reset: "Restablecer",
-    send: "Enviar",
+    ready: "Fertig", failed: "Fehlgeschlagen" },
+  es: { language: "Idioma", reset: "Restablecer", send: "Enviar",
     placeholder: "Escribe tu pregunta… (Mayús+Enter = nueva línea)",
     greeting: "¡Hola! Respondo a preguntas técnicas basándome en la documentación vinculada. ¿Qué te gustaría saber?",
-    ready: "Hecho",
-    failed: "Error",
-  },
-  it: {
-    language: "Lingua",
-    reset: "Reimposta",
-    send: "Invia",
+    ready: "Hecho", failed: "Error" },
+  it: { language: "Lingua", reset: "Reimposta", send: "Invia",
     placeholder: "Scrivi la tua domanda… (Shift+Invio = nuova riga)",
     greeting: "Ciao! Rispondo a domande tecniche basate sulla documentazione collegata. Cosa vorresti sapere?",
-    ready: "Pronto",
-    failed: "Non riuscito",
-  },
-  cs: { // Tsjechisch
-    language: "Jazyk",
-    reset: "Resetovat",
-    send: "Odeslat",
+    ready: "Pronto", failed: "Non riuscito" },
+  cs: { language: "Jazyk", reset: "Resetovat", send: "Odeslat",
     placeholder: "Zadejte svou otázku… (Shift+Enter = nový řádek)",
     greeting: "Dobrý den! Odpovídám na technické otázky na základě připojené dokumentace. Co byste chtěli vědět?",
-    ready: "Hotovo",
-    failed: "Selhalo",
-  },
-  sv: { // Zweeds
-    language: "Språk",
-    reset: "Återställ",
-    send: "Skicka",
+    ready: "Hotovo", failed: "Selhalo" },
+  sv: { language: "Språk", reset: "Återställ", send: "Skicka",
     placeholder: "Skriv din fråga… (Skift+Enter = ny rad)",
     greeting: "Hej! Jag svarar på tekniska frågor baserat på den länkade dokumentationen. Vad vill du veta?",
-    ready: "Klar",
-    failed: "Misslyckades",
-  },
-  hr: { // Kroatisch
-    language: "Jezik",
-    reset: "Poništi",
-    send: "Pošalji",
+    ready: "Klar", failed: "Misslyckades" },
+  hr: { language: "Jezik", reset: "Poništi", send: "Pošalji",
     placeholder: "Upišite svoje pitanje… (Shift+Enter = novi red)",
     greeting: "Pozdrav! Odgovaram na tehnička pitanja temeljena na povezanoj dokumentaciji. Što želite znati?",
-    ready: "Gotovo",
-    failed: "Neuspjelo",
-  },
-  hu: { // Hongaars
-    language: "Nyelv",
-    reset: "Visszaállítás",
-    send: "Küldés",
+    ready: "Gotovo", failed: "Neuspjelo" },
+  hu: { language: "Nyelv", reset: "Visszaállítás", send: "Küldés",
     placeholder: "Írd be a kérdésed… (Shift+Enter = új sor)",
     greeting: "Helló! A kapcsolt dokumentáció alapján válaszolok műszaki kérdésekre. Mit szeretnél tudni?",
-    ready: "Kész",
-    failed: "Sikertelen",
-  },
+    ready: "Kész", failed: "Sikertelen" },
 };
 
 /* ========= Language logic ========= */
@@ -113,7 +63,7 @@ function detectBrowserLang() {
     const code = (l || "").slice(0, 2).toLowerCase();
     if (translations[code]) return code;
   }
-  return "nl"; // default Winsol
+  return "nl";
 }
 function currentLangCode() {
   const v = (langSelect && langSelect.value) || "auto";
@@ -163,21 +113,16 @@ function setBusy(on) {
 }
 
 function showTypingIndicator() {
-  // Verwijder bestaande indicator (voor de zekerheid)
   removeTypingIndicator();
-
   const wrap = document.createElement("div");
   wrap.className = "msg assistant typing-indicator-wrapper";
-
   const bubble = document.createElement("div");
   bubble.className = "typing-indicator";
   bubble.innerHTML = "<span></span><span></span><span></span>";
-
   wrap.appendChild(bubble);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
 }
-
 function removeTypingIndicator() {
   document.querySelectorAll(".typing-indicator-wrapper").forEach(el => el.remove());
 }
@@ -196,7 +141,7 @@ async function send() {
 
   const body = {
     query: q,
-    language: currentLangCode(),
+    language: currentLangCode(),   // <-- UI-taal meegeven (of browser bij 'auto')
     threadId: getThreadId(),
   };
 
@@ -212,15 +157,15 @@ async function send() {
 
     const data = await res.json();
     removeTypingIndicator();
-    
-    if (data.threadId) setThreadId(data.threadId);
 
+    if (data.threadId) setThreadId(data.threadId);
     const text = (data.answer || "—").trim();
     const html = sanitize(text).replace(/\n/g, "<br>");
     renderMessage("assistant", html);
 
     statusEl.textContent = `${tt.ready} (${((performance.now() - t0) / 1000).toFixed(1)} s)`;
   } catch (e) {
+    removeTypingIndicator();
     renderMessage("assistant", sanitize(`Fout: ${e?.message || e}`));
     statusEl.textContent = t().failed;
   } finally {
@@ -241,10 +186,7 @@ function resetConversation() {
 sendBtn.addEventListener("click", send);
 resetBtn.addEventListener("click", resetConversation);
 input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    send();
-  }
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
 });
 langSelect.addEventListener("change", () => {
   applyUIStrings();
