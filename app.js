@@ -173,6 +173,26 @@ function setBusy(on) {
   input.disabled = on;
 }
 
+function showTypingIndicator() {
+  // Verwijder bestaande indicator (voor de zekerheid)
+  removeTypingIndicator();
+
+  const wrap = document.createElement("div");
+  wrap.className = "msg assistant typing-indicator-wrapper";
+
+  const bubble = document.createElement("div");
+  bubble.className = "typing-indicator";
+  bubble.innerHTML = "<span></span><span></span><span></span>";
+
+  wrap.appendChild(bubble);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  document.querySelectorAll(".typing-indicator-wrapper").forEach(el => el.remove());
+}
+
 /* ========= Actions ========= */
 async function send() {
   if (pending) return;
@@ -193,6 +213,7 @@ async function send() {
 
   const t0 = performance.now();
   try {
+    showTypingIndicator();
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -201,6 +222,8 @@ async function send() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();
+    removeTypingIndicator();
+    
     if (data.threadId) setThreadId(data.threadId);
 
     const text = (data.answer || "—").trim();
