@@ -182,7 +182,6 @@ async function send() {
   const tt = t();
   setBusy(true);
   statusEl.textContent = "!!Searching!!";
-  showLoadingIndicator();
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
 
   const body = {
