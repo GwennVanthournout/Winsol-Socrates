@@ -183,6 +183,7 @@ async function send() {
   setBusy(true);
   statusEl.textContent = "!!Searching!!";
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
+  input.value = "";
 
   const body = {
     query: q,
