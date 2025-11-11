@@ -201,7 +201,7 @@ async function send() {
 
   const tt = t();
   setBusy(true);
-  statusEl.textContent = "!!Searching!!";
+  statusEl.textContent = "...";
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
   input.value = "";
 
