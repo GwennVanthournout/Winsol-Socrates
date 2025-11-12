@@ -135,8 +135,7 @@ async function send() {
 
   // 1️⃣ Lees expliciet de geselecteerde taal uit de dropdown
   const langEl = document.getElementById("language") || document.getElementById("lang");
-  const uiLang = langEl?.value || "auto";
-  const uiLangLabel = langEl?.selectedOptions?.[0]?.text || uiLang;
+  const uiLang = (langEl && langEl.value) ? langEl.value : "auto";
 
   const tt = t();
   setBusy(true);
@@ -147,8 +146,7 @@ async function send() {
   // 2️⃣ Stuur gekozen taal mee
   const body = {
     query: q,
-    language: uiLang,          // bv. "it", "es-ES", "Italiano"
-    languageLabel: uiLangLabel // bv. "Italiano", "Español"
+    language: uiLang,
     threadId: getThreadId(),
   };
 
