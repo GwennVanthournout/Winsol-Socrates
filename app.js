@@ -133,15 +133,20 @@ async function send() {
   const q = (input.value || "").trim();
   if (!q) return;
 
+  // 1️⃣ Lees expliciet de geselecteerde taal uit de dropdown
+  const langEl = document.getElementById("language") || document.getElementById("lang");
+  const uiLang = (langEl && langEl.value) ? langEl.value : "auto";
+
   const tt = t();
   setBusy(true);
   statusEl.textContent = "...";
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
   input.value = "";
 
+  // 2️⃣ Stuur gekozen taal mee
   const body = {
     query: q,
-    language: currentLangCode(),   // <-- UI-taal meegeven (of browser bij 'auto')
+    language: uiLang,
     threadId: getThreadId(),
   };
 
@@ -159,6 +164,7 @@ async function send() {
     removeTypingIndicator();
 
     if (data.threadId) setThreadId(data.threadId);
+
     const text = (data.answer || "—").trim();
     const html = sanitize(text).replace(/\n/g, "<br>");
     renderMessage("assistant", html);
@@ -169,11 +175,11 @@ async function send() {
     renderMessage("assistant", sanitize(`Fout: ${e?.message || e}`));
     statusEl.textContent = t().failed;
   } finally {
-    input.value = "";
     input.focus();
     setBusy(false);
   }
 }
+
 
 function resetConversation() {
   if (pending) return;
