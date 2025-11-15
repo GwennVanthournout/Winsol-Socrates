@@ -105,6 +105,19 @@ function renderMessage(role, html) {
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
 }
+
+function createAssistantStreamBubble() {
+  const wrap = document.createElement("div");
+  wrap.className = "msg assistant";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = "";
+  wrap.appendChild(bubble);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+  return bubble;
+}
+
 function setBusy(on) {
   pending = on;
   sendBtn.disabled = on;
@@ -133,17 +146,19 @@ async function send() {
   const q = (input.value || "").trim();
   if (!q) return;
 
-  // 1️⃣ Lees expliciet de geselecteerde taal uit de dropdown
-  const langEl = document.getElementById("language") || document.getElementById("lang");
+  // 1️⃣ Geselecteerde taal uit de dropdown
+  const langEl =
+    document.getElementById("language") || document.getElementById("lang");
   const uiLang = (langEl && langEl.value) ? langEl.value : "auto";
 
   const tt = t();
   setBusy(true);
   statusEl.textContent = "...";
+
+  // User message renderen
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
   input.value = "";
 
-  // 2️⃣ Stuur gekozen taal mee
   const body = {
     query: q,
     language: uiLang,
@@ -151,6 +166,7 @@ async function send() {
   };
 
   const t0 = performance.now();
+
   try {
     showTypingIndicator();
     const res = await fetch(API_URL, {
@@ -158,27 +174,75 @@ async function send() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const data = await res.json();
+    if (!res.ok || !res.body) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
     removeTypingIndicator();
 
-    if (data.threadId) setThreadId(data.threadId);
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let assistantText = "";
+    const bubble = createAssistantStreamBubble();
 
-    const text = (data.answer || "—").trim();
-    const html = sanitize(text).replace(/\n/g, "<br>");
-    renderMessage("assistant", html);
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
 
-    statusEl.textContent = `${tt.ready} (${((performance.now() - t0) / 1000).toFixed(1)} s)`;
+      let idx;
+      while ((idx = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, idx).trim();
+        buffer = buffer.slice(idx + 1);
+        if (!line) continue;
+
+        let evt;
+        try {
+          evt = JSON.parse(line);
+        } catch {
+          continue;
+        }
+
+        if (evt.type === "meta" && evt.threadId) {
+          setThreadId(evt.threadId);
+        } else if (evt.type === "delta") {
+          assistantText += evt.text || "";
+          const html = sanitize(assistantText).replace(/\n/g, "<br>");
+          bubble.innerHTML = html;
+          chat.scrollTop = chat.scrollHeight;
+        } else if (evt.type === "error") {
+          throw new Error(evt.message || "Stream error");
+        } else if (evt.type === "done") {
+          // Niets extra nodig; lus stopt vanzelf als de stream klaar is
+        }
+      }
+    }
+
+    if (!assistantText) {
+      assistantText = "Geen antwoord gevonden in de beschikbare documenten.";
+      const html = sanitize(assistantText).replace(/\n/g, "<br>");
+      bubble.innerHTML = html;
+    }
+
+    statusEl.textContent = `${tt.ready} (${(
+      (performance.now() - t0) /
+      1000
+    ).toFixed(1)} s)`;
   } catch (e) {
     removeTypingIndicator();
-    renderMessage("assistant", sanitize(`Fout: ${e?.message || e}`));
+    renderMessage(
+      "assistant",
+      sanitize(`Fout: ${e?.message || e}`),
+    );
     statusEl.textContent = t().failed;
   } finally {
     input.focus();
     setBusy(false);
   }
 }
+
 
 
 function resetConversation() {
