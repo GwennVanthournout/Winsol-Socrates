@@ -184,6 +184,33 @@ button:disabled {
   margin-top:6px;
 }
 
+/* --- Language selector in Winsol-stijl --- */
+#language, #lang, select#language {
+    font-size: 15px;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;     /* afgeronde hoeken */
+    background-color: #fff;
+    color: #333;
+    height: 40px;           /* iets hoger */
+    cursor: pointer;
+    appearance: none;       /* uniforme stijl */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* optioneel: hover */
+#language:hover, #lang:hover, select#language:hover {
+    border-color: #bbb;
+}
+
+/* optioneel: focus */
+#language:focus, #lang:focus, select#language:focus {
+    outline: 2px solid #ffcc00;     /* zachte Winsol-geel focusring */
+    border-color: #ffcc00;
+}
+
+
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
   .hero {
