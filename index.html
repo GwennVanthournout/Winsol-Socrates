@@ -9,7 +9,9 @@
   </head>
   <body>
     <main class="container">
+      
 
+      
       <!-- HERO: titel + logo in wit kader (logo RECHTS) -->
       <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
         <h1 class="hero__title">Winsol SO!Crates (Bot_build_11161639)</h1>
@@ -19,27 +21,43 @@
       <div class="toolbar">
         <div class="fields">
           <div class="language-box">
-              <div class="language-wrapper">
-                  <select id="language">
-                      <option value="auto" selected>Automatic</option>
-                      <option value="nl">Nederlands</option>
-                      <option value="fr">Français</option>
-                      <option value="en">English</option>
-                      <option value="de">Deutsch</option>
-                      <option value="es">Español</option>
-                      <option value="it">Italiano</option>
-                  <!--<option value="cs">Čeština</option>
-                      <option value="sv">Svenska</option>
-                      <option value="hr">Hrvatski</option>
-                      <option value="hu">Magyar</option> -->
-                  </select>
-              </div>
-              <svg class="lang-icon" viewBox="0 0 24 24">
-                <path fill="#555" d="M12 2a10 10 0 100 20 10 10 0 000-20zm7.93 9h-3.05a15.1 15.1 0 00-1.12-5.18 8.03 8.03 0 014.17 5.18zM12 4c.88 1.14 1.57 2.71 1.97 4.5H10.03C10.43 6.71 11.12 5.14 12 4zm-3.76.82A15.1 15.1 0 006.12 11H3.07a8.03 8.03 0 015.17-6.18zM3.07 13h3.05a15.1 15.1 0 001.12 5.18A8.03 8.03 0 013.07 13zm8.93 7c-.88-1.14-1.57-2.71-1.97-4.5h3.94c-.4 1.79-1.09 3.36-1.97 4.5zm3.76-.82a15.1 15.1 0 001.12-5.18h3.05a8.03 8.03 0 01-4.17 5.18z"/>
-              </svg>
-          </div>  
+            <div class="language-wrapper">
+              <select id="language">
+                <option value="auto" selected>Automatic</option>
+                <option value="nl">Nederlands</option>
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+                <option value="es">Español</option>
+                <option value="it">Italiano</option>
+            <!--<option value="cs">Čeština</option>
+                <option value="sv">Svenska</option>
+                <option value="hr">Hrvatski</option>
+                <option value="hu">Magyar</option> -->             
+              </select>
+            </div>
+      
+            <!-- globe-icoon -->
+            <svg class="lang-icon" viewBox="0 0 24 24">
+              <path fill="#555" d="M12 2a10 10 0 100 20 10 10 0 000-20zm7.93 9h-3.05a15.1 15.1 0 00-1.12-5.18 8.03 8.03 0 014.17 5.18zM12 4c.88 1.14 1.57 2.71 1.97 4.5H10.03C10.43 6.71 11.12 5.14 12 4zm-3.76.82A15.1 15.1 0 006.12 11H3.07a8.03 8.03 0 015.17-6.18zM3.07 13h3.05a15.1 15.1 0 001.12 5.18A8.03 8.03 0 013.07 13zm8.93 7c-.88-1.14-1.57-2.71-1.97-4.5h3.94c-.4 1.79-1.09 3.36-1.97 4.5zm3.76-.82a15.1 15.1 0 001.12-5.18h3.05a8.03 8.03 0 01-4.17 5.18z"/>
+            </svg>
+      
+            <!-- Knop 1: Mail -->
+            <button type="button" id="mailBtn" class="btn-secondary">Mail</button>
+      
+            <!-- Knop 2: PDF-link -->
+            <a
+              id="pdfBtn"
+              class="btn-secondary"
+              href="https://winsolgroup.sharepoint.com/sites/SunprotectionAndOutdoorLiving/PublishedDocuments/Forms/BIB%20RD.aspx?viewid=9bb1db15%2D1a0f%2D4455%2Db0b0%2D0d2356e1ea0c&id=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21%2FSO%21%5FSPECS%5F2025%2D00%2Epdf&parent=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              PDF
+            </a>
+          </div>
         </div>
-
+      
         <div class="actions">
           <button id="resetBtn" title="New conversation">Reset</button>
         </div>
