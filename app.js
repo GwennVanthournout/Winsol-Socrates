@@ -7,7 +7,9 @@ const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 const resetBtn = document.getElementById("resetBtn");
 const statusEl = document.getElementById("status");
-const langSelect = document.getElementById("lang");
+
+const langSelect =
+  document.getElementById("language") || document.getElementById("lang");
 const langLabel = document.getElementById("langLabel");
 
 let pending = false;
@@ -258,13 +260,16 @@ resetBtn.addEventListener("click", resetConversation);
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
 });
-langSelect.addEventListener("change", () => {
-  applyUIStrings();
-  if (!chat.querySelector(".msg.user")) {
-    chat.innerHTML = "";
-    renderMessage("assistant", sanitize(t().greeting));
-  }
-});
+
+if (langSelect) {
+  langSelect.addEventListener("change", () => {
+    applyUIStrings();
+    if (!chat.querySelector(".msg.user")) {
+      chat.innerHTML = "";
+      renderMessage("assistant", sanitize(t().greeting));
+    }
+  });
+}
 
 /* ========= Boot ========= */
 applyUIStrings();
