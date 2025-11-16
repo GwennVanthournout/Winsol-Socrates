@@ -231,7 +231,7 @@ button:disabled {
 
 .language-wrapper select {
     font-size: 15px;
-    padding: 8px 40px 8px 14px;   /* ruimte voor het pijltje */
+    padding: 8px 60px 8px 14px;   /* ruimte voor het pijltje */
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
