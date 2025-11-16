@@ -7,10 +7,10 @@ const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 const resetBtn = document.getElementById("resetBtn");
 const statusEl = document.getElementById("status");
-
 const langSelect =
   document.getElementById("language") || document.getElementById("lang");
 const langLabel = document.getElementById("langLabel");
+const mailBtn = document.getElementById("mailBtn");
 
 let pending = false;
 
@@ -118,6 +118,25 @@ function createAssistantStreamBubble() {
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
   return bubble;
+}
+
+function buildTranscript() {
+  const lines = [];
+  chat.querySelectorAll(".msg").forEach((msg) => {
+    const bubble = msg.querySelector(".bubble");
+    if (!bubble) return;
+
+    let role = "";
+    if (msg.classList.contains("user")) role = "User";
+    else if (msg.classList.contains("assistant")) role = "SO!Crates";
+
+    const text = bubble.innerText.trim();
+    if (!role || !text) return;
+
+    lines.push(`${role}:\n${text}`);
+  });
+
+  return lines.join("\n\n");
 }
 
 function setBusy(on) {
