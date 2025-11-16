@@ -189,12 +189,12 @@ button:disabled {
     font-size: 15px;
     padding: 8px 14px;
     border: 1px solid #ccc;
-    border-radius: 8px;     /* afgeronde hoeken */
+    border-radius: 8px;
     background-color: #fff;
     color: #333;
-    height: 40px;           /* iets hoger */
+    height: 40px;
     cursor: pointer;
-    appearance: none;       /* uniforme stijl */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
 }
@@ -208,7 +208,7 @@ button:disabled {
 .lang-icon {
     width: 22px;
     height: 22px;
-    fill: #666;   /* neutraal */
+    fill: #666;
 }
 
 
@@ -219,7 +219,7 @@ button:disabled {
 
 /* optioneel: focus */
 #language:focus, #lang:focus, select#language:focus {
-    outline: 2px solid #ffcc00;     /* zachte Winsol-geel focusring */
+    outline: 2px solid #ffcc00;
     border-color: #ffcc00;
 }
 
