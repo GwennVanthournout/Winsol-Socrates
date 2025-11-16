@@ -276,6 +276,17 @@ function resetConversation() {
 /* ========= Events ========= */
 sendBtn.addEventListener("click", send);
 resetBtn.addEventListener("click", resetConversation);
+
+if (mailBtn) {
+  mailBtn.addEventListener("click", () => {
+    const transcript = buildTranscript() || "Geen chatgeschiedenis beschikbaar.";
+    const subject = encodeURIComponent("SO!Crates mail");
+    const body = encodeURIComponent(transcript);
+    const mailto = `mailto:pergolasupport@winsol.eu?subject=${subject}&body=${body}`;
+    window.location.href = mailto;
+  });
+}
+
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
 });
@@ -289,6 +300,7 @@ if (langSelect) {
     }
   });
 }
+
 
 /* ========= Boot ========= */
 applyUIStrings();
