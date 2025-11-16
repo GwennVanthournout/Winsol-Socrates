@@ -199,6 +199,19 @@ button:disabled {
     -moz-appearance: none;
 }
 
+.language-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lang-icon {
+    width: 22px;
+    height: 22px;
+    fill: #666;   /* neutraal */
+}
+
+
 /* optioneel: hover */
 #language:hover, #lang:hover, select#language:hover {
     border-color: #bbb;
