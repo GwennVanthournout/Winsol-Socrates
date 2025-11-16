@@ -210,6 +210,41 @@ button:disabled {
     border-color: #ffcc00;
 }
 
+/* Dropdown met geel Winsol-pijltje */
+.language-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.language-wrapper select {
+    font-size: 15px;
+    padding: 8px 40px 8px 14px;   /* ruimte voor het pijltje */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    height: 40px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Geel pijltje rechts */
+.language-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 7px solid #FFCC00;   /* Winsol geel */
+}
+
 
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
