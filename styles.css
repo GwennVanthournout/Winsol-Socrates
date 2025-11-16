@@ -288,3 +288,29 @@ button:disabled {
     width:auto;
   }
 }
+
+/* Kleine secundaire knoppen naast de taalkeuze (Mail / PDF) */
+.btn-secondary {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: #111;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none; /* voor de <a> (PDF) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: #ffde33;
+}
+
+/* zorg dat links niet paars/blauw worden */
+.btn-secondary:link,
+.btn-secondary:visited {
+  color: #111;
+}
