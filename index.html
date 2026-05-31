@@ -6,7 +6,260 @@
     <title>Winsol SO!Crates</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/png" href="SO-Crates_Icon.png" />
+  </head><!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Winsol SO!Crates</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="SO-Crates_Icon.png" />
   </head>
+  <body>
+    <main class="container">
+
+      <!-- HERO -->
+      <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
+        <h1 class="hero__title">Winsol SO!Crates (01-03-'26)</h1>
+        <img class="hero__logo" src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" />
+      </header>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="fields">
+          <div class="language-box">
+            <div class="language-wrapper">
+              <select id="language">
+                <option value="auto" selected>Automatic</option>
+                <option value="nl">Nederlands</option>
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+                <option value="es">Español</option>
+                <option value="it">Italiano</option>
+              </select>
+            </div>
+            <svg class="lang-icon" viewBox="0 0 24 24">
+              <path fill="#555" d="M12 2a10 10 0 100 20 10 10 0 000-20zm7.93 9h-3.05a15.1 15.1 0 00-1.12-5.18 8.03 8.03 0 014.17 5.18zM12 4c.88 1.14 1.57 2.71 1.97 4.5H10.03C10.43 6.71 11.12 5.14 12 4zm-3.76.82A15.1 15.1 0 006.12 11H3.07a8.03 8.03 0 015.17-6.18zM3.07 13h3.05a15.1 15.1 0 001.12 5.18A8.03 8.03 0 013.07 13zm8.93 7c-.88-1.14-1.57-2.71-1.97-4.5h3.94c-.4 1.79-1.09 3.36-1.97 4.5zm3.76-.82a15.1 15.1 0 001.12-5.18h3.05a8.03 8.03 0 01-4.17 5.18z"/>
+            </svg>
+            <button type="button" id="mailBtn" class="btn-secondary">Mail</button>
+            <a id="pdfBtn" class="btn-secondary"
+               href="https://winsolgroup.sharepoint.com/sites/SunprotectionAndOutdoorLiving/PublishedDocuments/Forms/BIB%20RD.aspx?viewid=9bb1db15%2D1a0f%2D4455%2Db0b0%2D0d2356e1ea0c&id=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21%2FSO%21%5FSPECS%5F2025%2D00%2Epdf&parent=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21"
+               target="_blank" rel="noopener noreferrer">PDF</a>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="resetBtn" title="New conversation">Reset</button>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="chat">Q&amp;A</button>
+        <button class="tab-btn" data-tab="troubleshoot">Probleemoplossing</button>
+      </div>
+
+      <!-- TAB: CHAT -->
+      <div id="tab-chat" class="tab-panel active">
+        <div id="chat" class="chat" aria-live="polite"></div>
+        <div class="composer">
+          <textarea id="input" rows="3" placeholder="Type your question... (Shift+Enter = new line)"></textarea>
+          <button id="sendBtn" class="primary">Send</button>
+        </div>
+        <div id="status" class="status"></div>
+      </div>
+
+      <!-- TAB: PROBLEEMOPLOSSING -->
+      <div id="tab-troubleshoot" class="tab-panel">
+        <div class="ts-toolbar">
+          <div class="language-wrapper">
+            <select id="ts-component">
+              <option value="">— Kies component —</option>
+              <option value="screen">Screen</option>
+              <option value="led">LED</option>
+              <option value="lamel">Lamel</option>
+            </select>
+          </div>
+        </div>
+        <div id="ts-app">
+          <div class="ts-loading" id="ts-placeholder">Kies een component om te starten.</div>
+        </div>
+      </div>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+
+    <script>
+    // ── Tab switching ────────────────────────────────────────────────────────
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ── Troubleshoot tool ────────────────────────────────────────────────────
+    const TS_API = "https://winsol-socrates-dev.gwenn-vanthournout.workers.dev";
+
+    const tsLabels = {
+      nl: { loading:"Matrix laden…", chooseControl:"Type aansturing?", chooseComplaint:"Wat is het probleem?",
+            solved:"✓ Opgelost", notHelped:"→ Geen effect, volgende oorzaak",
+            doneSolved:"Probleem opgelost!", doneNoMore:"Geen verdere oorzaak. Neem contact op met technische support.",
+            restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten.",
+            labelCause:"Mogelijke oorzaak", labelAction:"Voorgestelde actie" },
+      fr: { loading:"Chargement…", chooseControl:"Type de commande ?", chooseComplaint:"Quel est le problème ?",
+            solved:"✓ Résolu", notHelped:"→ Sans effet, cause suivante",
+            doneSolved:"Problème résolu !", doneNoMore:"Aucune autre cause. Contactez le support technique.",
+            restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant.",
+            labelCause:"Cause possible", labelAction:"Action suggérée" },
+      en: { loading:"Loading…", chooseControl:"Control type?", chooseComplaint:"What is the problem?",
+            solved:"✓ Solved", notHelped:"→ No effect, next cause",
+            doneSolved:"Problem solved!", doneNoMore:"No further cause found. Contact technical support.",
+            restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component.",
+            labelCause:"Possible cause", labelAction:"Suggested action" },
+      de: { loading:"Wird geladen…", chooseControl:"Steuerungstyp?", chooseComplaint:"Was ist das Problem?",
+            solved:"✓ Gelöst", notHelped:"→ Keine Wirkung, nächste Ursache",
+            doneSolved:"Problem gelöst!", doneNoMore:"Keine weiteren Ursachen. Support kontaktieren.",
+            restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen.",
+            labelCause:"Mögliche Ursache", labelAction:"Empfohlene Maßnahme" },
+      es: { loading:"Cargando…", chooseControl:"¿Tipo de control?", chooseComplaint:"¿Cuál es el problema?",
+            solved:"✓ Resuelto", notHelped:"→ Sin efecto, siguiente causa",
+            doneSolved:"¡Problema resuelto!", doneNoMore:"Sin más causas. Contacte soporte técnico.",
+            restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente.",
+            labelCause:"Posible causa", labelAction:"Acción sugerida" },
+      it: { loading:"Caricamento…", chooseControl:"Tipo di controllo?", chooseComplaint:"Qual è il problema?",
+            solved:"✓ Risolto", notHelped:"→ Nessun effetto, causa successiva",
+            doneSolved:"Problema risolto!", doneNoMore:"Nessun'altra causa. Contattare il supporto.",
+            restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente.",
+            labelCause:"Possibile causa", labelAction:"Azione suggerita" },
+    };
+
+    function tsT() {
+      const l = (document.getElementById("language").value || "auto");
+      const code = l === "auto" ? (navigator.language || "nl").slice(0,2) : l;
+      return tsLabels[code] || tsLabels.nl;
+    }
+
+    let tsMatrix = null, tsControl = null, tsComplaint = null, tsCauses = [], tsStep = 0;
+    const tsApp = () => document.getElementById("ts-app");
+
+    function tsRender(html) { tsApp().innerHTML = html; }
+
+    function tsCard(title, body) {
+      return `<div class="ts-card"><h2>${title}</h2>${body}</div>`;
+    }
+
+    function tsShowControl() {
+      const ri = tsMatrix.required_info[0];
+      let btns = ri.opties.map((opt, i) =>
+        `<button class="ts-btn" data-idx="${i}">${opt}</button>`).join("");
+      tsRender(tsCard(ri.vraag, `<div class="ts-btn-list">${btns}</div>`));
+      tsApp().querySelectorAll(".ts-btn").forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+          tsControl = ri.opties[i].toLowerCase().includes("casambi") ? "casambi" : "somfy";
+          tsShowComplaints();
+        });
+      });
+    }
+
+    function tsApplicableComplaints() {
+      return tsMatrix.complaints.filter(c =>
+        c.klacht && c.oorzaken_volgorde.some(code => {
+          const cause = tsMatrix.causes[code];
+          return cause && ((tsControl === "casambi" && cause.casambi) || (tsControl === "somfy" && cause.somfy));
+        })
+      );
+    }
+
+    function tsShowComplaints() {
+      const list = tsApplicableComplaints();
+      let btns = list.map((c, i) => `<button class="ts-btn" data-idx="${i}">${c.klacht}</button>`).join("");
+      tsRender(tsCard(tsT().chooseComplaint, `<div class="ts-btn-list">${btns}</div>`));
+      tsApp().querySelectorAll(".ts-btn").forEach((btn, i) => {
+        btn.addEventListener("click", () => { tsComplaint = list[i]; tsStartDiagnosis(); });
+      });
+    }
+
+    function tsStartDiagnosis() {
+      tsCauses = tsComplaint.oorzaken_volgorde.filter(code => {
+        const c = tsMatrix.causes[code];
+        return c && ((tsControl === "casambi" && c.casambi) || (tsControl === "somfy" && c.somfy));
+      });
+      tsStep = 0;
+      tsShowStep();
+    }
+
+    function tsShowStep() {
+      if (tsStep >= tsCauses.length) { tsShowDone(false); return; }
+      const cause = tsMatrix.causes[tsCauses[tsStep]];
+      const n = tsStep + 1, total = tsCauses.length;
+      tsRender(`<div class="ts-card">
+        <div class="ts-step-badge">${n} / ${total}</div>
+        ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
+        <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
+        <div class="ts-action-row">
+          <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
+          <button class="ts-btn secondary" id="ts-next">${tsT().notHelped}</button>
+        </div>
+      </div>`);
+      document.getElementById("ts-solved").addEventListener("click", () => tsShowDone(true));
+      document.getElementById("ts-next").addEventListener("click", () => { tsStep++; tsShowStep(); });
+    }
+
+    function tsShowDone(solved) {
+      const icon = solved ? "✅" : "🔧";
+      const msg  = solved ? tsT().doneSolved : tsT().doneNoMore;
+      tsRender(`<div class="ts-card ts-done">
+        <div class="icon">${icon}</div>
+        <h2>${msg}</h2>
+        <button class="ts-btn primary" id="ts-restart">${tsT().restart}</button>
+      </div>`);
+      document.getElementById("ts-restart").addEventListener("click", tsReset);
+    }
+
+    function tsReset() {
+      tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
+      if (tsMatrix) tsShowControl();
+    }
+
+    async function tsLoad() {
+      const component = document.getElementById("ts-component").value;
+      const lang = (document.getElementById("language").value || "auto");
+      const langCode = lang === "auto" ? (navigator.language || "nl").slice(0,2) : lang;
+      if (!component) { tsRender(`<div class="ts-loading">${tsT().start}</div>`); return; }
+      tsRender(`<div class="ts-loading">${tsT().loading}</div>`);
+      try {
+        const res = await fetch(`${TS_API}/matrix?component=${component}&language=${langCode}`);
+        if (!res.ok) throw new Error(res.status);
+        tsMatrix = await res.json();
+        tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
+        tsShowControl();
+      } catch {
+        tsRender(`<div class="ts-card"><div class="ts-error">${tsT().noMatrix}</div></div>`);
+      }
+    }
+
+    document.getElementById("ts-component").addEventListener("change", tsLoad);
+    document.getElementById("language").addEventListener("change", () => {
+      if (document.getElementById("ts-component").value) tsLoad();
+    });
+
+    // ── Reset knop: ook troubleshoot resetten ────────────────────────────────
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      const tsActive = document.getElementById("tab-troubleshoot").classList.contains("active");
+      if (tsActive) {
+        tsMatrix = null; tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
+        document.getElementById("ts-component").value = "";
+        tsRender(`<div class="ts-loading">${tsT().start}</div>`);
+      }
+    });
+    </script>
+  </body>
+</html>
+
   <body>
     <main class="container">
 
