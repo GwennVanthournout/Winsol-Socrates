@@ -251,14 +251,7 @@ button:disabled { opacity:.6; cursor:not-allowed; }
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-.ts-toolbar select {
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  background: var(--surface);
-  cursor: pointer;
-}
+/* ts-toolbar select styling via .language-wrapper select */
 .ts-card {
   background: var(--surface);
   border: 1px solid var(--border);
