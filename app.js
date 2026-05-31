@@ -196,15 +196,9 @@ async function send() {
       body: JSON.stringify(body),
     });
 
-    //RETURN ERROR
-    if (!res.ok) {
-    let msg = `HTTP ${res.status}`;
-    try {
-      const err = await res.json();
-      if (err?.error) msg += " - " + err.error;
-    } catch {}
-    throw new Error(msg);
-}
+    if (!res.ok || !res.body) {
+      throw new Error(`HTTP ${res.status}`);
+    }
 
     removeTypingIndicator();
 
