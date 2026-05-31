@@ -6,18 +6,129 @@
     <title>Winsol SO!Crates</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/png" href="SO-Crates_Icon.png" />
+    <style>
+      /* ── Tabs ───────────────────────────────────────────────────── */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 0 0 0 0;
+        margin-bottom: 12px;
+      }
+      .tab-btn {
+        padding: 8px 20px;
+        border: 2px solid #ccc;
+        border-radius: 8px 8px 0 0;
+        background: #f0f0f0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .tab-btn.active {
+        background: #FFD700;
+        border-color: #FFD700;
+        color: #1a1a1a;
+      }
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
+
+      /* ── Troubleshoot panel ─────────────────────────────────────── */
+      .ts-toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .ts-toolbar select {
+        padding: 6px 12px;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        background: #fff;
+        cursor: pointer;
+      }
+      .ts-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 12px;
+      }
+      .ts-card h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 14px;
+      }
+      .ts-btn-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .ts-btn {
+        padding: 10px 14px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 0.9rem;
+        text-align: left;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .ts-btn:hover { border-color: #FFD700; background: #fffbe6; }
+      .ts-btn.primary { background: #FFD700; border-color: #FFD700; font-weight: 600; }
+      .ts-btn.primary:hover { background: #f0c800; }
+      .ts-btn.danger { border-color: #e53e3e; color: #e53e3e; }
+      .ts-btn.danger:hover { background: #fff5f5; }
+
+      .ts-step-badge {
+        display: inline-block;
+        background: #FFD700;
+        border-radius: 20px;
+        padding: 2px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .ts-step-cause {
+        font-size: 0.82rem;
+        color: #666;
+        font-style: italic;
+        margin-bottom: 8px;
+      }
+      .ts-step-action {
+        font-size: 0.95rem;
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+      .ts-action-row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .ts-action-row .ts-btn { flex: 1; min-width: 130px; text-align: center; }
+
+      .ts-done { text-align: center; padding: 24px 16px; }
+      .ts-done .icon { font-size: 2rem; margin-bottom: 10px; }
+      .ts-done h2 { font-size: 1.1rem; margin-bottom: 14px; }
+
+      .ts-loading { padding: 24px; color: #888; text-align: center; font-size: 0.9rem; }
+      .ts-error {
+        background: #fff5f5;
+        border: 2px solid #e53e3e;
+        border-radius: 8px;
+        padding: 14px;
+        color: #c53030;
+        font-size: 0.9rem;
+      }
+    </style>
   </head>
   <body>
     <main class="container">
-      
 
-      
-      <!-- HERO: titel + logo in wit kader (logo RECHTS) -->
+      <!-- HERO -->
       <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
-        <h1 class="hero__title">Winsol SO!Crates (Bot_build_0103261823)</h1>
+        <h1 class="hero__title">Winsol SO!Crates (01-03-'26)</h1>
         <img class="hero__logo" src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" />
       </header>
 
+      <!-- TOOLBAR -->
       <div class="toolbar">
         <div class="fields">
           <div class="language-box">
@@ -30,53 +141,207 @@
                 <option value="de">Deutsch</option>
                 <option value="es">Español</option>
                 <option value="it">Italiano</option>
-            <!--<option value="cs">Čeština</option>
-                <option value="sv">Svenska</option>
-                <option value="hr">Hrvatski</option>
-                <option value="hu">Magyar</option> -->             
               </select>
             </div>
-      
-            <!-- globe-icoon -->
             <svg class="lang-icon" viewBox="0 0 24 24">
               <path fill="#555" d="M12 2a10 10 0 100 20 10 10 0 000-20zm7.93 9h-3.05a15.1 15.1 0 00-1.12-5.18 8.03 8.03 0 014.17 5.18zM12 4c.88 1.14 1.57 2.71 1.97 4.5H10.03C10.43 6.71 11.12 5.14 12 4zm-3.76.82A15.1 15.1 0 006.12 11H3.07a8.03 8.03 0 015.17-6.18zM3.07 13h3.05a15.1 15.1 0 001.12 5.18A8.03 8.03 0 013.07 13zm8.93 7c-.88-1.14-1.57-2.71-1.97-4.5h3.94c-.4 1.79-1.09 3.36-1.97 4.5zm3.76-.82a15.1 15.1 0 001.12-5.18h3.05a8.03 8.03 0 01-4.17 5.18z"/>
             </svg>
-      
-            <!-- Knop 1: Mail -->
             <button type="button" id="mailBtn" class="btn-secondary">Mail</button>
-      
-            <!-- Knop 2: PDF-link -->
-            <a
-              id="pdfBtn"
-              class="btn-secondary"
-              href="https://winsolgroup.sharepoint.com/sites/SunprotectionAndOutdoorLiving/PublishedDocuments/Forms/BIB%20RD.aspx?viewid=9bb1db15%2D1a0f%2D4455%2Db0b0%2D0d2356e1ea0c&id=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21%2FSO%21%5FSPECS%5F2025%2D00%2Epdf&parent=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              PDF
-            </a>
+            <a id="pdfBtn" class="btn-secondary"
+               href="https://winsolgroup.sharepoint.com/sites/SunprotectionAndOutdoorLiving/PublishedDocuments/Forms/BIB%20RD.aspx?viewid=9bb1db15%2D1a0f%2D4455%2Db0b0%2D0d2356e1ea0c&id=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21%2FSO%21%5FSPECS%5F2025%2D00%2Epdf&parent=%2Fsites%2FSunprotectionAndOutdoorLiving%2FPublishedDocuments%2FPRODUCTS%2FPERGOLA%2FSO%21"
+               target="_blank" rel="noopener noreferrer">PDF</a>
           </div>
         </div>
-      
         <div class="actions">
           <button id="resetBtn" title="New conversation">Reset</button>
         </div>
       </div>
 
-      <!-- CHAT -->
-      <div id="chat" class="chat" aria-live="polite"></div>
-
-      <!-- COMPOSER -->
-      <div class="composer">
-        <textarea id="input" rows="3" placeholder="Type your question... (Shift+Enter = new line)"></textarea>
-        <button id="sendBtn" class="primary">Send</button>
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="chat">Q&amp;A</button>
+        <button class="tab-btn" data-tab="troubleshoot">Probleemoplossing</button>
       </div>
 
-      <div id="status" class="status"></div>
-    
-      </main>
-      
+      <!-- TAB: CHAT -->
+      <div id="tab-chat" class="tab-panel active">
+        <div id="chat" class="chat" aria-live="polite"></div>
+        <div class="composer">
+          <textarea id="input" rows="3" placeholder="Type your question... (Shift+Enter = new line)"></textarea>
+          <button id="sendBtn" class="primary">Send</button>
+        </div>
+        <div id="status" class="status"></div>
+      </div>
+
+      <!-- TAB: PROBLEEMOPLOSSING -->
+      <div id="tab-troubleshoot" class="tab-panel">
+        <div class="ts-toolbar">
+          <select id="ts-component">
+            <option value="">— Kies component —</option>
+            <option value="screen">Screen</option>
+            <option value="led">LED</option>
+            <option value="lamel">Lamel</option>
+          </select>
+        </div>
+        <div id="ts-app">
+          <div class="ts-loading" id="ts-placeholder">Kies een component om te starten.</div>
+        </div>
+      </div>
+
+    </main>
 
     <script type="module" src="app.js"></script>
+
+    <script>
+    // ── Tab switching ────────────────────────────────────────────────────────
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ── Troubleshoot tool ────────────────────────────────────────────────────
+    const TS_API = "https://winsol-socrates-dev.gwenn-vanthournout.workers.dev";
+
+    const tsLabels = {
+      nl: { loading:"Matrix laden…", chooseControl:"Type aansturing?", chooseComplaint:"Wat is het probleem?",
+            solved:"✓ Opgelost", notHelped:"✗ Helpt niet / Al gedaan",
+            doneSolved:"Probleem opgelost!", doneNoMore:"Geen verdere oorzaak. Neem contact op met technische support.",
+            restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten." },
+      fr: { loading:"Chargement…", chooseControl:"Type de commande ?", chooseComplaint:"Quel est le problème ?",
+            solved:"✓ Résolu", notHelped:"✗ N'aide pas / Déjà fait",
+            doneSolved:"Problème résolu !", doneNoMore:"Aucune autre cause. Contactez le support technique.",
+            restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant." },
+      en: { loading:"Loading…", chooseControl:"Control type?", chooseComplaint:"What is the problem?",
+            solved:"✓ Solved", notHelped:"✗ Doesn't help / Already done",
+            doneSolved:"Problem solved!", doneNoMore:"No further cause found. Contact technical support.",
+            restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component." },
+      de: { loading:"Wird geladen…", chooseControl:"Steuerungstyp?", chooseComplaint:"Was ist das Problem?",
+            solved:"✓ Gelöst", notHelped:"✗ Hilft nicht / Bereits erledigt",
+            doneSolved:"Problem gelöst!", doneNoMore:"Keine weiteren Ursachen. Support kontaktieren.",
+            restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen." },
+      es: { loading:"Cargando…", chooseControl:"¿Tipo de control?", chooseComplaint:"¿Cuál es el problema?",
+            solved:"✓ Resuelto", notHelped:"✗ No ayuda / Ya hecho",
+            doneSolved:"¡Problema resuelto!", doneNoMore:"Sin más causas. Contacte soporte técnico.",
+            restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente." },
+      it: { loading:"Caricamento…", chooseControl:"Tipo di controllo?", chooseComplaint:"Qual è il problema?",
+            solved:"✓ Risolto", notHelped:"✗ Non aiuta / Già fatto",
+            doneSolved:"Problema risolto!", doneNoMore:"Nessun'altra causa. Contattare il supporto.",
+            restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente." },
+    };
+
+    function tsT() {
+      const l = (document.getElementById("language").value || "auto");
+      const code = l === "auto" ? (navigator.language || "nl").slice(0,2) : l;
+      return tsLabels[code] || tsLabels.nl;
+    }
+
+    let tsMatrix = null, tsControl = null, tsComplaint = null, tsCauses = [], tsStep = 0;
+    const tsApp = () => document.getElementById("ts-app");
+
+    function tsRender(html) { tsApp().innerHTML = html; }
+
+    function tsCard(title, body) {
+      return `<div class="ts-card"><h2>${title}</h2>${body}</div>`;
+    }
+
+    function tsShowControl() {
+      const ri = tsMatrix.required_info[0];
+      let btns = ri.opties.map((opt, i) =>
+        `<button class="ts-btn" data-idx="${i}">${opt}</button>`).join("");
+      tsRender(tsCard(ri.vraag, `<div class="ts-btn-list">${btns}</div>`));
+      tsApp().querySelectorAll(".ts-btn").forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+          tsControl = ri.opties[i].toLowerCase().includes("casambi") ? "casambi" : "somfy";
+          tsShowComplaints();
+        });
+      });
+    }
+
+    function tsApplicableComplaints() {
+      return tsMatrix.complaints.filter(c =>
+        c.klacht && c.oorzaken_volgorde.some(code => {
+          const cause = tsMatrix.causes[code];
+          return cause && ((tsControl === "casambi" && cause.casambi) || (tsControl === "somfy" && cause.somfy));
+        })
+      );
+    }
+
+    function tsShowComplaints() {
+      const list = tsApplicableComplaints();
+      let btns = list.map((c, i) => `<button class="ts-btn" data-idx="${i}">${c.klacht}</button>`).join("");
+      tsRender(tsCard(tsT().chooseComplaint, `<div class="ts-btn-list">${btns}</div>`));
+      tsApp().querySelectorAll(".ts-btn").forEach((btn, i) => {
+        btn.addEventListener("click", () => { tsComplaint = list[i]; tsStartDiagnosis(); });
+      });
+    }
+
+    function tsStartDiagnosis() {
+      tsCauses = tsComplaint.oorzaken_volgorde.filter(code => {
+        const c = tsMatrix.causes[code];
+        return c && ((tsControl === "casambi" && c.casambi) || (tsControl === "somfy" && c.somfy));
+      });
+      tsStep = 0;
+      tsShowStep();
+    }
+
+    function tsShowStep() {
+      if (tsStep >= tsCauses.length) { tsShowDone(false); return; }
+      const cause = tsMatrix.causes[tsCauses[tsStep]];
+      const n = tsStep + 1, total = tsCauses.length;
+      tsRender(`<div class="ts-card">
+        <div class="ts-step-badge">${n} / ${total}</div>
+        <div class="ts-step-cause">${cause.omschrijving || ""}</div>
+        <div class="ts-step-action">${cause.oplossing}</div>
+        <div class="ts-action-row">
+          <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
+          <button class="ts-btn danger"  id="ts-next">${tsT().notHelped}</button>
+        </div>
+      </div>`);
+      document.getElementById("ts-solved").addEventListener("click", () => tsShowDone(true));
+      document.getElementById("ts-next").addEventListener("click", () => { tsStep++; tsShowStep(); });
+    }
+
+    function tsShowDone(solved) {
+      const icon = solved ? "✅" : "🔧";
+      const msg  = solved ? tsT().doneSolved : tsT().doneNoMore;
+      tsRender(`<div class="ts-card ts-done">
+        <div class="icon">${icon}</div>
+        <h2>${msg}</h2>
+        <button class="ts-btn primary" id="ts-restart">${tsT().restart}</button>
+      </div>`);
+      document.getElementById("ts-restart").addEventListener("click", tsReset);
+    }
+
+    function tsReset() {
+      tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
+      if (tsMatrix) tsShowControl();
+    }
+
+    async function tsLoad() {
+      const component = document.getElementById("ts-component").value;
+      const lang = (document.getElementById("language").value || "auto");
+      const langCode = lang === "auto" ? (navigator.language || "nl").slice(0,2) : lang;
+      if (!component) { tsRender(`<div class="ts-loading">${tsT().start}</div>`); return; }
+      tsRender(`<div class="ts-loading">${tsT().loading}</div>`);
+      try {
+        const res = await fetch(`${TS_API}/matrix?component=${component}&language=${langCode}`);
+        if (!res.ok) throw new Error(res.status);
+        tsMatrix = await res.json();
+        tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
+        tsShowControl();
+      } catch {
+        tsRender(`<div class="ts-card"><div class="ts-error">${tsT().noMatrix}</div></div>`);
+      }
+    }
+
+    document.getElementById("ts-component").addEventListener("change", tsLoad);
+    document.getElementById("language").addEventListener("change", () => {
+      if (document.getElementById("ts-component").value) tsLoad();
+    });
+    </script>
   </body>
 </html>
