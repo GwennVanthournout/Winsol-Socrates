@@ -1,5 +1,4 @@
 // app.js
-// Zet dit naar je Worker endpoint:
 const API_URL = "https://winsol-socrates-dev.gwenn-vanthournout.workers.dev/ask";
 
 const chat = document.getElementById("chat");
@@ -85,9 +84,19 @@ function applyUIStrings() {
 }
 
 /* ========= Conversation state ========= */
-function getThreadId() { return sessionStorage.getItem("threadId") || ""; }
-function setThreadId(id) { if (id) sessionStorage.setItem("threadId", id); }
-function clearThread() { sessionStorage.removeItem("threadId"); }
+function getThreadId()    { return sessionStorage.getItem("threadId")    || ""; }
+function setThreadId(id)  { if (id) sessionStorage.setItem("threadId", id); }
+function getSessionMode() { return sessionStorage.getItem("sessionMode") || ""; }
+function getSessionComp() { return sessionStorage.getItem("sessionComp") || ""; }
+function setSessionMode(mode, comp) {
+  if (mode) sessionStorage.setItem("sessionMode", mode);
+  if (comp) sessionStorage.setItem("sessionComp", comp);
+}
+function clearThread() {
+  sessionStorage.removeItem("threadId");
+  sessionStorage.removeItem("sessionMode");
+  sessionStorage.removeItem("sessionComp");
+}
 
 /* ========= Rendering ========= */
 function sanitize(str = "") {
@@ -98,54 +107,43 @@ function sanitize(str = "") {
 function renderMessage(role, html) {
   const wrap = document.createElement("div");
   wrap.className = `msg ${role}`;
-
   const bubble = document.createElement("div");
   bubble.className = "bubble";
   bubble.innerHTML = html;
-
   wrap.appendChild(bubble);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
 }
-
 function createAssistantStreamBubble() {
   const wrap = document.createElement("div");
   wrap.className = "msg assistant";
   const bubble = document.createElement("div");
   bubble.className = "bubble";
-  bubble.innerHTML = "";
   wrap.appendChild(bubble);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
   return bubble;
 }
-
 function buildTranscript() {
   const lines = [];
   chat.querySelectorAll(".msg").forEach((msg) => {
     const bubble = msg.querySelector(".bubble");
     if (!bubble) return;
-
     let role = "";
     if (msg.classList.contains("user")) role = "User";
     else if (msg.classList.contains("assistant")) role = "SO!Crates";
-
     const text = bubble.innerText.trim();
     if (!role || !text) return;
-
     lines.push(`${role}:\n${text}`);
   });
-
   return lines.join("\n\n");
 }
-
 function setBusy(on) {
   pending = on;
   sendBtn.disabled = on;
   resetBtn.disabled = on;
   input.disabled = on;
 }
-
 function showTypingIndicator() {
   removeTypingIndicator();
   const wrap = document.createElement("div");
@@ -161,29 +159,27 @@ function removeTypingIndicator() {
   document.querySelectorAll(".typing-indicator-wrapper").forEach(el => el.remove());
 }
 
-/* ========= Actions ========= */
+/* ========= Send ========= */
 async function send() {
   if (pending) return;
   const q = (input.value || "").trim();
   if (!q) return;
 
-  // 1️⃣ Geselecteerde taal uit de dropdown
-  const langEl =
-    document.getElementById("language") || document.getElementById("lang");
+  const langEl = document.getElementById("language") || document.getElementById("lang");
   const uiLang = (langEl && langEl.value) ? langEl.value : "auto";
 
-  const tt = t();
   setBusy(true);
   statusEl.textContent = "...";
-
-  // User message renderen
   renderMessage("user", sanitize(q).replace(/\n/g, "<br>"));
   input.value = "";
 
+  // Stuur sessiemodus mee zodat de Worker niet opnieuw hoeft te classificeren
   const body = {
-    query: q,
-    language: uiLang,
-    threadId: getThreadId(),
+    query:     q,
+    language:  uiLang,
+    threadId:  getThreadId(),
+    sessionMode: getSessionMode() || undefined,
+    sessionComp: getSessionComp() || undefined,
   };
 
   const t0 = performance.now();
@@ -196,10 +192,7 @@ async function send() {
       body: JSON.stringify(body),
     });
 
-    if (!res.ok || !res.body) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-
+    if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
     removeTypingIndicator();
 
     const reader = res.body.getReader();
@@ -220,51 +213,37 @@ async function send() {
         if (!line) continue;
 
         let evt;
-        try {
-          evt = JSON.parse(line);
-        } catch {
-          continue;
-        }
+        try { evt = JSON.parse(line); } catch { continue; }
 
-        if (evt.type === "meta" && evt.threadId) {
-          setThreadId(evt.threadId);
+        if (evt.type === "meta") {
+          if (evt.threadId) setThreadId(evt.threadId);
+          // Sla modus op zodat volgende berichten in dezelfde modus blijven
+          if (evt.mode || evt.component) setSessionMode(evt.mode, evt.component);
         } else if (evt.type === "delta") {
           assistantText += evt.text || "";
-          const html = sanitize(assistantText).replace(/\n/g, "<br>");
-          bubble.innerHTML = html;
+          bubble.innerHTML = sanitize(assistantText).replace(/\n/g, "<br>");
           chat.scrollTop = chat.scrollHeight;
         } else if (evt.type === "error") {
           throw new Error(evt.message || "Stream error");
-        } else if (evt.type === "done") {
-          // Niets extra nodig; lus stopt vanzelf als de stream klaar is
         }
       }
     }
 
     if (!assistantText) {
       assistantText = "Geen antwoord gevonden in de beschikbare documenten.";
-      const html = sanitize(assistantText).replace(/\n/g, "<br>");
-      bubble.innerHTML = html;
+      bubble.innerHTML = sanitize(assistantText);
     }
 
-    statusEl.textContent = `${tt.ready} (${(
-      (performance.now() - t0) /
-      1000
-    ).toFixed(1)} s)`;
+    statusEl.textContent = `${t().ready} (${((performance.now() - t0) / 1000).toFixed(1)} s)`;
   } catch (e) {
     removeTypingIndicator();
-    renderMessage(
-      "assistant",
-      sanitize(`Fout: ${e?.message || e}`),
-    );
+    renderMessage("assistant", sanitize(`Fout: ${e?.message || e}`));
     statusEl.textContent = t().failed;
   } finally {
     input.focus();
     setBusy(false);
   }
 }
-
-
 
 function resetConversation() {
   if (pending) return;
@@ -282,8 +261,7 @@ if (mailBtn) {
     const transcript = buildTranscript() || "Geen chatgeschiedenis beschikbaar.";
     const subject = encodeURIComponent("SO!Crates mail");
     const body = encodeURIComponent(transcript);
-    const mailto = `mailto:pergolasupport@winsol.eu?subject=${subject}&body=${body}`;
-    window.location.href = mailto;
+    window.location.href = `mailto:pergolasupport@winsol.eu?subject=${subject}&body=${body}`;
   });
 }
 
@@ -300,7 +278,6 @@ if (langSelect) {
     }
   });
 }
-
 
 /* ========= Boot ========= */
 applyUIStrings();
