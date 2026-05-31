@@ -289,8 +289,9 @@ button:disabled { opacity:.6; cursor:not-allowed; }
   font-weight: 700;
   margin-bottom: 6px;
 }
-.ts-step-cause  { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-bottom: 8px; }
-.ts-step-action { font-size: 0.95rem; margin-bottom: 18px; line-height: 1.5; }
+.ts-step-field  { font-size: 0.95rem; margin-bottom: 10px; line-height: 1.5; }
+.ts-step-field:last-of-type { margin-bottom: 18px; }
+.ts-step-label  { font-weight: 700; }
 .ts-action-row         { display: flex; gap: 10px; flex-wrap: wrap; }
 .ts-action-row .ts-btn { flex: 1; min-width: 130px; text-align: center; }
 
