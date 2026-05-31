@@ -66,7 +66,7 @@
         <div class="ts-toolbar">
           <div class="language-wrapper">
             <select id="ts-component">
-              <option value="">Kies component</option>
+              <option value="">— Kies component —</option>
               <option value="screen">Screen</option>
               <option value="led">LED</option>
               <option value="lamel">Lamel</option>
@@ -100,27 +100,33 @@
       nl: { loading:"Matrix laden…", chooseControl:"Type aansturing?", chooseComplaint:"Wat is het probleem?",
             solved:"✓ Opgelost", notHelped:"→ Geen effect, volgende oorzaak",
             doneSolved:"Probleem opgelost!", doneNoMore:"Geen verdere oorzaak. Neem contact op met technische support.",
-            restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten." },
+            restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten.",
+            labelCause:"Mogelijke oorzaak", labelAction:"Voorgestelde actie" },
       fr: { loading:"Chargement…", chooseControl:"Type de commande ?", chooseComplaint:"Quel est le problème ?",
             solved:"✓ Résolu", notHelped:"→ Sans effet, cause suivante",
             doneSolved:"Problème résolu !", doneNoMore:"Aucune autre cause. Contactez le support technique.",
-            restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant." },
+            restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant.",
+            labelCause:"Cause possible", labelAction:"Action suggérée" },
       en: { loading:"Loading…", chooseControl:"Control type?", chooseComplaint:"What is the problem?",
             solved:"✓ Solved", notHelped:"→ No effect, next cause",
             doneSolved:"Problem solved!", doneNoMore:"No further cause found. Contact technical support.",
-            restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component." },
+            restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component.",
+            labelCause:"Possible cause", labelAction:"Suggested action" },
       de: { loading:"Wird geladen…", chooseControl:"Steuerungstyp?", chooseComplaint:"Was ist das Problem?",
             solved:"✓ Gelöst", notHelped:"→ Keine Wirkung, nächste Ursache",
             doneSolved:"Problem gelöst!", doneNoMore:"Keine weiteren Ursachen. Support kontaktieren.",
-            restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen." },
+            restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen.",
+            labelCause:"Mögliche Ursache", labelAction:"Empfohlene Maßnahme" },
       es: { loading:"Cargando…", chooseControl:"¿Tipo de control?", chooseComplaint:"¿Cuál es el problema?",
             solved:"✓ Resuelto", notHelped:"→ Sin efecto, siguiente causa",
             doneSolved:"¡Problema resuelto!", doneNoMore:"Sin más causas. Contacte soporte técnico.",
-            restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente." },
+            restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente.",
+            labelCause:"Posible causa", labelAction:"Acción sugerida" },
       it: { loading:"Caricamento…", chooseControl:"Tipo di controllo?", chooseComplaint:"Qual è il problema?",
             solved:"✓ Risolto", notHelped:"→ Nessun effetto, causa successiva",
             doneSolved:"Problema risolto!", doneNoMore:"Nessun'altra causa. Contattare il supporto.",
-            restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente." },
+            restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente.",
+            labelCause:"Possibile causa", labelAction:"Azione suggerita" },
     };
 
     function tsT() {
@@ -184,8 +190,8 @@
       const n = tsStep + 1, total = tsCauses.length;
       tsRender(`<div class="ts-card">
         <div class="ts-step-badge">${n} / ${total}</div>
-        <div class="ts-step-cause">${cause.omschrijving || ""}</div>
-        <div class="ts-step-action">${cause.oplossing}</div>
+        ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
+        <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
         <div class="ts-action-row">
           <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
           <button class="ts-btn secondary" id="ts-next">${tsT().notHelped}</button>
