@@ -78,8 +78,8 @@
       .ts-btn:hover { border-color: #FFD700; background: #fffbe6; }
       .ts-btn.primary { background: #FFD700; border-color: #FFD700; font-weight: 600; }
       .ts-btn.primary:hover { background: #f0c800; }
-      .ts-btn.danger { border-color: #e53e3e; color: #e53e3e; }
-      .ts-btn.danger:hover { background: #fff5f5; }
+      .ts-btn.secondary { border-color: #999; color: #333; }
+      .ts-btn.secondary:hover { border-color: #555; background: #f5f5f5; }
 
       .ts-step-badge {
         display: inline-block;
@@ -208,27 +208,27 @@
 
     const tsLabels = {
       nl: { loading:"Matrix laden…", chooseControl:"Type aansturing?", chooseComplaint:"Wat is het probleem?",
-            solved:"✓ Opgelost", notHelped:"✗ Helpt niet / Al gedaan",
+            solved:"✓ Opgelost", notHelped:"→ Geen effect, volgende oorzaak",
             doneSolved:"Probleem opgelost!", doneNoMore:"Geen verdere oorzaak. Neem contact op met technische support.",
             restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten." },
       fr: { loading:"Chargement…", chooseControl:"Type de commande ?", chooseComplaint:"Quel est le problème ?",
-            solved:"✓ Résolu", notHelped:"✗ N'aide pas / Déjà fait",
+            solved:"✓ Résolu", notHelped:"→ Sans effet, cause suivante",
             doneSolved:"Problème résolu !", doneNoMore:"Aucune autre cause. Contactez le support technique.",
             restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant." },
       en: { loading:"Loading…", chooseControl:"Control type?", chooseComplaint:"What is the problem?",
-            solved:"✓ Solved", notHelped:"✗ Doesn't help / Already done",
+            solved:"✓ Solved", notHelped:"→ No effect, next cause",
             doneSolved:"Problem solved!", doneNoMore:"No further cause found. Contact technical support.",
             restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component." },
       de: { loading:"Wird geladen…", chooseControl:"Steuerungstyp?", chooseComplaint:"Was ist das Problem?",
-            solved:"✓ Gelöst", notHelped:"✗ Hilft nicht / Bereits erledigt",
+            solved:"✓ Gelöst", notHelped:"→ Keine Wirkung, nächste Ursache",
             doneSolved:"Problem gelöst!", doneNoMore:"Keine weiteren Ursachen. Support kontaktieren.",
             restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen." },
       es: { loading:"Cargando…", chooseControl:"¿Tipo de control?", chooseComplaint:"¿Cuál es el problema?",
-            solved:"✓ Resuelto", notHelped:"✗ No ayuda / Ya hecho",
+            solved:"✓ Resuelto", notHelped:"→ Sin efecto, siguiente causa",
             doneSolved:"¡Problema resuelto!", doneNoMore:"Sin más causas. Contacte soporte técnico.",
             restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente." },
       it: { loading:"Caricamento…", chooseControl:"Tipo di controllo?", chooseComplaint:"Qual è il problema?",
-            solved:"✓ Risolto", notHelped:"✗ Non aiuta / Già fatto",
+            solved:"✓ Risolto", notHelped:"→ Nessun effetto, causa successiva",
             doneSolved:"Problema risolto!", doneNoMore:"Nessun'altra causa. Contattare il supporto.",
             restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente." },
     };
@@ -298,7 +298,7 @@
         <div class="ts-step-action">${cause.oplossing}</div>
         <div class="ts-action-row">
           <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
-          <button class="ts-btn danger"  id="ts-next">${tsT().notHelped}</button>
+          <button class="ts-btn secondary" id="ts-next">${tsT().notHelped}</button>
         </div>
       </div>`);
       document.getElementById("ts-solved").addEventListener("click", () => tsShowDone(true));
