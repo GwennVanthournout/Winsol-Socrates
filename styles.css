@@ -300,9 +300,9 @@ button:disabled { opacity:.6; cursor:not-allowed; }
 .ts-action-row         { display: flex; gap: 10px; flex-wrap: wrap; }
 .ts-action-row .ts-btn { flex: 1; min-width: 130px; text-align: center; }
 
-.ts-done       { text-align: center; padding: 24px 16px; }
-.ts-done .icon { font-size: 2rem; margin-bottom: 10px; }
-.ts-done h2    { font-size: 1.1rem; margin-bottom: 14px; }
+.ts-done    { text-align: center; padding: 24px 16px; }
+.ts-done h2 { font-size: 1.1rem; margin-bottom: 14px; }
+.ts-done a  { color: #111; font-weight: 600; }
 
 .ts-loading { padding: 24px; color: var(--muted); text-align: center; font-size: 0.9rem; }
 .ts-error {
