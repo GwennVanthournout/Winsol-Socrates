@@ -297,8 +297,10 @@ button:disabled { opacity:.6; cursor:not-allowed; }
 .ts-step-link   { font-size: 0.9rem; margin-bottom: 18px; }
 .ts-step-link a { color: #111; font-weight: 600; text-decoration: underline; }
 .ts-step-link a:hover { color: #555; }
-.ts-action-row         { display: flex; gap: 10px; flex-wrap: wrap; }
+.ts-step-header        { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.ts-action-row         { display: flex; gap: 8px; flex-shrink: 0; }
 .ts-action-row .ts-btn { flex: 1; min-width: 130px; text-align: center; }
+.ts-btn-sm             { padding: 6px 12px; font-size: 0.82rem; min-width: 0 !important; white-space: nowrap; }
 
 .ts-done    { text-align: center; padding: 24px 16px; }
 .ts-done h2 { font-size: 1.1rem; margin-bottom: 14px; }
