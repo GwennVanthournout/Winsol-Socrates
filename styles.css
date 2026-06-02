@@ -290,6 +290,7 @@ button:disabled { opacity:.6; cursor:not-allowed; }
   font-weight: 700;
   margin-bottom: 6px;
 }
+.ts-complaint-label { font-size: 0.88rem; color: var(--muted); font-style: italic; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .ts-step-field  { font-size: 0.95rem; margin-bottom: 16px; line-height: 1.6; }
 .ts-step-field:last-of-type { margin-bottom: 24px; }
 .ts-step-label  { font-weight: 700; display: block; margin-bottom: 4px; }
