@@ -197,10 +197,16 @@
       const linkHtml = cause.link
         ? `<div class="ts-step-link"><a href="${cause.link}" target="_blank" rel="noopener noreferrer">${tsT().linkText}</a></div>`
         : "";
+      const imagesHtml = (cause.images && cause.images.length)
+        ? `<div class="ts-step-images">${cause.images.map(f =>
+            `<img src="PNG/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
+          ).join("")}</div>`
+        : "";
       tsRender(`<div class="ts-card">
         <div class="ts-step-badge">${n} / ${total}</div>
         ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
         <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
+        ${imagesHtml}
         ${linkHtml}
         <div class="ts-action-row">
           <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
