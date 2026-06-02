@@ -203,15 +203,17 @@
           ).join("")}</div>`
         : "";
       tsRender(`<div class="ts-card">
-        <div class="ts-step-badge">${n} / ${total}</div>
+        <div class="ts-step-header">
+          <div class="ts-step-badge">${n} / ${total}</div>
+          <div class="ts-action-row">
+            <button class="ts-btn primary ts-btn-sm" id="ts-solved">${tsT().solved}</button>
+            <button class="ts-btn secondary ts-btn-sm" id="ts-next">${tsT().notHelped}</button>
+          </div>
+        </div>
         ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
         <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
         ${imagesHtml}
         ${linkHtml}
-        <div class="ts-action-row">
-          <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
-          <button class="ts-btn secondary" id="ts-next">${tsT().notHelped}</button>
-        </div>
       </div>`);
       document.getElementById("ts-solved").addEventListener("click", () => tsShowDone(true));
       document.getElementById("ts-next").addEventListener("click", () => { tsStep++; tsShowStep(); });
