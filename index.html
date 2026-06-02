@@ -12,7 +12,7 @@
 
       <!-- HERO -->
       <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
-        <h1 class="hero__title">Winsol SO!Crates (02-06-'26)</h1>
+        <h1 class="hero__title">Winsol SO!Crates (01-03-'26)</h1>
         <img class="hero__logo" src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" />
       </header>
 
@@ -199,7 +199,7 @@
         : "";
       const imagesHtml = (cause.images && cause.images.length)
         ? `<div class="ts-step-images">${cause.images.map(f =>
-            `<img src="PNG/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
+            `<img src="/PNG/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
           ).join("")}</div>`
         : "";
       tsRender(`<div class="ts-card">
