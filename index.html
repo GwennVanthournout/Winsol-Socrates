@@ -12,7 +12,7 @@
 
       <!-- HERO -->
       <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
-        <h1 class="hero__title">Winsol SO!Crates (01-06-'26)</h1>
+        <h1 class="hero__title">Winsol SO!Crates (01-03-'26)</h1>
         <img class="hero__logo" src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" />
       </header>
 
@@ -48,7 +48,7 @@
       <!-- TABS -->
       <div class="tabs">
         <button class="tab-btn active" data-tab="chat">Q&amp;A</button>
-        <button class="tab-btn" data-tab="troubleshoot">Probleemoplossing</button>
+        <button class="tab-btn" id="tab-btn-troubleshoot" data-tab="troubleshoot">Probleemoplossing</button>
       </div>
 
       <!-- TAB: CHAT -->
@@ -101,32 +101,38 @@
             solved:"✓ Opgelost", notHelped:"→ Geen effect, volgende oorzaak",
             doneSolved:"Probleem opgelost!", doneNoMore:"Geen verdere oorzaak. Neem contact op met technische support.",
             restart:"Opnieuw starten", noMatrix:"Matrix niet beschikbaar voor dit component.", start:"Kies een component om te starten.",
-            labelCause:"Mogelijke oorzaak", labelAction:"Voorgestelde actie" },
+            labelCause:"Mogelijke oorzaak", labelAction:"Voorgestelde actie",
+            tabTroubleshoot:"Probleemoplossing", linkText:"Zie link voor meer uitleg" },
       fr: { loading:"Chargement…", chooseControl:"Type de commande ?", chooseComplaint:"Quel est le problème ?",
             solved:"✓ Résolu", notHelped:"→ Sans effet, cause suivante",
             doneSolved:"Problème résolu !", doneNoMore:"Aucune autre cause. Contactez le support technique.",
             restart:"Recommencer", noMatrix:"Matrice non disponible.", start:"Choisissez un composant.",
-            labelCause:"Cause possible", labelAction:"Action suggérée" },
+            labelCause:"Cause possible", labelAction:"Action suggérée",
+            tabTroubleshoot:"Dépannage", linkText:"Voir le lien pour plus d'informations" },
       en: { loading:"Loading…", chooseControl:"Control type?", chooseComplaint:"What is the problem?",
             solved:"✓ Solved", notHelped:"→ No effect, next cause",
             doneSolved:"Problem solved!", doneNoMore:"No further cause found. Contact technical support.",
             restart:"Start over", noMatrix:"Matrix not available.", start:"Choose a component.",
-            labelCause:"Possible cause", labelAction:"Suggested action" },
+            labelCause:"Possible cause", labelAction:"Suggested action",
+            tabTroubleshoot:"Troubleshooting", linkText:"See link for more information" },
       de: { loading:"Wird geladen…", chooseControl:"Steuerungstyp?", chooseComplaint:"Was ist das Problem?",
             solved:"✓ Gelöst", notHelped:"→ Keine Wirkung, nächste Ursache",
             doneSolved:"Problem gelöst!", doneNoMore:"Keine weiteren Ursachen. Support kontaktieren.",
             restart:"Neu starten", noMatrix:"Matrix nicht verfügbar.", start:"Komponente wählen.",
-            labelCause:"Mögliche Ursache", labelAction:"Empfohlene Maßnahme" },
+            labelCause:"Mögliche Ursache", labelAction:"Empfohlene Maßnahme",
+            tabTroubleshoot:"Fehlerbehebung", linkText:"Siehe Link für weitere Informationen" },
       es: { loading:"Cargando…", chooseControl:"¿Tipo de control?", chooseComplaint:"¿Cuál es el problema?",
             solved:"✓ Resuelto", notHelped:"→ Sin efecto, siguiente causa",
             doneSolved:"¡Problema resuelto!", doneNoMore:"Sin más causas. Contacte soporte técnico.",
             restart:"Reiniciar", noMatrix:"Matriz no disponible.", start:"Elija un componente.",
-            labelCause:"Posible causa", labelAction:"Acción sugerida" },
+            labelCause:"Posible causa", labelAction:"Acción sugerida",
+            tabTroubleshoot:"Solución de problemas", linkText:"Ver enlace para más información" },
       it: { loading:"Caricamento…", chooseControl:"Tipo di controllo?", chooseComplaint:"Qual è il problema?",
             solved:"✓ Risolto", notHelped:"→ Nessun effetto, causa successiva",
             doneSolved:"Problema risolto!", doneNoMore:"Nessun'altra causa. Contattare il supporto.",
             restart:"Ricominciare", noMatrix:"Matrice non disponibile.", start:"Scegliere un componente.",
-            labelCause:"Possibile causa", labelAction:"Azione suggerita" },
+            labelCause:"Possibile causa", labelAction:"Azione suggerita",
+            tabTroubleshoot:"Risoluzione dei problemi", linkText:"Vedi link per ulteriori informazioni" },
     };
 
     function tsT() {
@@ -188,10 +194,14 @@
       if (tsStep >= tsCauses.length) { tsShowDone(false); return; }
       const cause = tsMatrix.causes[tsCauses[tsStep]];
       const n = tsStep + 1, total = tsCauses.length;
+      const linkHtml = cause.link
+        ? `<div class="ts-step-link"><a href="${cause.link}" target="_blank" rel="noopener noreferrer">${tsT().linkText}</a></div>`
+        : "";
       tsRender(`<div class="ts-card">
         <div class="ts-step-badge">${n} / ${total}</div>
         ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
         <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
+        ${linkHtml}
         <div class="ts-action-row">
           <button class="ts-btn primary" id="ts-solved">${tsT().solved}</button>
           <button class="ts-btn secondary" id="ts-next">${tsT().notHelped}</button>
@@ -234,8 +244,15 @@
       }
     }
 
+    // Tab-label bijwerken bij taalwissel
+    function tsUpdateTabLabel() {
+      document.getElementById("tab-btn-troubleshoot").textContent = tsT().tabTroubleshoot;
+    }
+    tsUpdateTabLabel(); // initieel instellen
+
     document.getElementById("ts-component").addEventListener("change", tsLoad);
     document.getElementById("language").addEventListener("change", () => {
+      tsUpdateTabLabel();
       if (document.getElementById("ts-component").value) tsLoad();
     });
 
