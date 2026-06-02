@@ -202,14 +202,11 @@
             `<img src="PNG/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
           ).join("")}</div>`
         : "";
-      const prevBtn = tsStep > 0
-        ? `<button class="ts-btn secondary ts-btn-sm" id="ts-prev">${tsT().prev}</button>`
-        : "";
       tsRender(`<div class="ts-card">
         <div class="ts-step-header">
           <div class="ts-step-badge">${n} / ${total}</div>
           <div class="ts-action-row">
-            ${prevBtn}
+            <button class="ts-btn secondary ts-btn-sm" id="ts-prev" style="${tsStep === 0 ? 'visibility:hidden' : ''}">${tsT().prev}</button>
             <button class="ts-btn primary ts-btn-sm" id="ts-solved">${tsT().solved}</button>
             <button class="ts-btn secondary ts-btn-sm" id="ts-next">${tsT().notHelped}</button>
           </div>
@@ -219,7 +216,7 @@
         ${imagesHtml}
         ${linkHtml}
       </div>`);
-      if (tsStep > 0) document.getElementById("ts-prev").addEventListener("click", () => { tsStep--; tsShowStep(); });
+      document.getElementById("ts-prev").addEventListener("click", () => { if (tsStep > 0) { tsStep--; tsShowStep(); } });
       document.getElementById("ts-solved").addEventListener("click", () => tsShowDone(true));
       document.getElementById("ts-next").addEventListener("click", () => { tsStep++; tsShowStep(); });
     }
