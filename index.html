@@ -211,6 +211,7 @@
             <button class="ts-btn secondary ts-btn-sm" id="ts-next">${tsT().notHelped}</button>
           </div>
         </div>
+        <div class="ts-complaint-label">${tsComplaint.klacht}</div>
         ${cause.omschrijving ? `<div class="ts-step-field"><span class="ts-step-label">${tsT().labelCause}:</span> ${cause.omschrijving}</div>` : ""}
         <div class="ts-step-field"><span class="ts-step-label">${tsT().labelAction}:</span> ${cause.oplossing}</div>
         ${imagesHtml}
