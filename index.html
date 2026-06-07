@@ -516,13 +516,43 @@
       ).join("") + `<div style="margin-top:6px;font-weight:600">${okCount} van ${results.length} gelukt</div>`;
     });
 
-    // ── Reset knop: ook troubleshoot resetten ────────────────────────────────
+    // ── Reset knop: ook troubleshoot en admin resetten ───────────────────────
     document.getElementById("resetBtn").addEventListener("click", () => {
-      const tsActive = document.getElementById("tab-troubleshoot").classList.contains("active");
+      const tsActive    = document.getElementById("tab-troubleshoot").classList.contains("active");
+      const adminActive = document.getElementById("tab-admin").classList.contains("active");
+
       if (tsActive) {
         tsMatrix = null; tsControl = null; tsComplaint = null; tsCauses = []; tsStep = 0;
         document.getElementById("ts-component").value = "";
         tsRender(`<div class="ts-loading">${tsT().start}</div>`);
+      }
+
+      if (adminActive) {
+        // Uitloggen + formulierstatus wissen
+        adminPassword      = null;
+        adminParsedMatrix  = null;
+        adminPngFiles      = [];
+
+        // Login-formulier terug tonen
+        document.getElementById("admin-login-form").style.display = "block";
+        document.getElementById("admin-panel").style.display      = "none";
+        document.getElementById("admin-pw").value                 = "";
+        document.getElementById("admin-login-error").textContent  = "";
+
+        // Matrix-sectie wissen
+        document.getElementById("admin-excel-name").textContent       = "";
+        document.getElementById("admin-matrix-preview").textContent   = "";
+        document.getElementById("admin-matrix-status").textContent    = "";
+        document.getElementById("admin-parse-btn").disabled           = true;
+        document.getElementById("admin-matrix-upload-btn").disabled   = true;
+        document.getElementById("admin-excel-file").value             = "";
+
+        // PNG-sectie wissen
+        document.getElementById("admin-png-list").textContent         = "";
+        document.getElementById("admin-png-status").textContent       = "";
+        document.getElementById("admin-png-upload-btn").disabled      = true;
+        document.getElementById("admin-png-upload-btn").textContent   = "Uploaden";
+        document.getElementById("admin-png-files").value              = "";
       }
     });
     </script>
