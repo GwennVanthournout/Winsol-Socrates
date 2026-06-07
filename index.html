@@ -49,6 +49,7 @@
       <div class="tabs">
         <button class="tab-btn active" data-tab="chat">Chat</button>
         <button class="tab-btn" id="tab-btn-troubleshoot" data-tab="troubleshoot">Probleemoplossing</button>
+        <button class="tab-btn" data-tab="admin">Admin</button>
       </div>
 
       <!-- TAB: CHAT -->
@@ -78,8 +79,72 @@
         </div>
       </div>
 
+      <!-- TAB: ADMIN -->
+      <div id="tab-admin" class="tab-panel">
+
+        <!-- Login form -->
+        <div id="admin-login-form" class="ts-card">
+          <h2>🔒 Admin</h2>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="password" id="admin-pw" placeholder="Wachtwoord"
+              style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;flex:1;min-width:180px;">
+            <button class="ts-btn primary ts-btn-sm" id="admin-login-btn">Inloggen</button>
+          </div>
+          <div id="admin-login-error" style="color:#c53030;font-size:0.85rem;margin-top:8px;min-height:1.2em;"></div>
+        </div>
+
+        <!-- Admin panel (verborgen tot login) -->
+        <div id="admin-panel" style="display:none;">
+
+          <!-- Matrix sectie -->
+          <div class="ts-card" style="margin-bottom:12px;">
+            <h2>📊 Matrix updaten</h2>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+              <div class="language-wrapper">
+                <select id="admin-component">
+                  <option value="screen">Screen</option>
+                  <option value="led">LED</option>
+                  <option value="lamel">Lamel</option>
+                </select>
+              </div>
+              <label class="ts-btn secondary ts-btn-sm" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                📂 Kies Excel-bestand
+                <input type="file" id="admin-excel-file" accept=".xlsx" style="display:none;">
+              </label>
+            </div>
+            <div id="admin-excel-name" style="font-size:0.85rem;color:var(--muted);margin-bottom:10px;min-height:1.2em;"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="ts-btn secondary ts-btn-sm" id="admin-parse-btn" disabled>Verwerk Excel</button>
+              <button class="ts-btn primary ts-btn-sm" id="admin-matrix-upload-btn" disabled>Uploaden naar KV</button>
+            </div>
+            <div id="admin-matrix-preview" style="font-size:0.88rem;color:var(--muted);margin-top:10px;min-height:1.2em;"></div>
+            <div id="admin-matrix-status" style="font-size:0.88rem;margin-top:6px;min-height:1.2em;"></div>
+          </div>
+
+          <!-- PNG sectie -->
+          <div class="ts-card">
+            <h2>🖼️ PNG's uploaden</h2>
+            <p style="font-size:0.85rem;color:var(--muted);margin:0 0 12px;">
+              PNG-bestandsnamen beginnen met de oorzaakcode (bv. <code>SC05-01.png</code>).
+              Na het uploaden zijn ze beschikbaar via de Worker.
+            </p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+              <label class="ts-btn secondary ts-btn-sm" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                📂 Kies PNG-bestanden
+                <input type="file" id="admin-png-files" accept=".png,image/png" multiple style="display:none;">
+              </label>
+              <button class="ts-btn primary ts-btn-sm" id="admin-png-upload-btn" disabled>Uploaden</button>
+            </div>
+            <div id="admin-png-list" style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;min-height:1.2em;"></div>
+            <div id="admin-png-status" style="font-size:0.88rem;margin-top:6px;"></div>
+          </div>
+
+        </div>
+      </div>
+
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script type="module" src="app.js"></script>
 
     <script>
@@ -199,7 +264,7 @@
         : "";
       const imagesHtml = (cause.images && cause.images.length)
         ? `<div class="ts-step-images">${cause.images.map(f =>
-            `<img src="PNG/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
+            `<img src="${TS_API}/png/${f}" alt="${f}" class="ts-step-img" loading="lazy" />`
           ).join("")}</div>`
         : "";
       tsRender(`<div class="ts-card">
@@ -263,6 +328,192 @@
     document.getElementById("language").addEventListener("change", () => {
       tsUpdateTabLabel();
       if (document.getElementById("ts-component").value) tsLoad();
+    });
+
+    // ── Admin tab ────────────────────────────────────────────────────────────
+    let adminPassword = null;
+    let adminParsedMatrix = null;
+    let adminPngFiles = [];
+
+    // Login
+    document.getElementById("admin-login-btn").addEventListener("click", adminLogin);
+    document.getElementById("admin-pw").addEventListener("keydown", e => { if (e.key === "Enter") adminLogin(); });
+
+    async function adminLogin() {
+      const pw = document.getElementById("admin-pw").value.trim();
+      if (!pw) return;
+      document.getElementById("admin-login-error").textContent = "";
+      try {
+        const res = await fetch(`${TS_API}/admin/ping`, { headers: { "X-Admin-Password": pw } });
+        if (res.ok) {
+          adminPassword = pw;
+          document.getElementById("admin-login-form").style.display = "none";
+          document.getElementById("admin-panel").style.display = "block";
+        } else {
+          document.getElementById("admin-login-error").textContent = "Verkeerd wachtwoord.";
+        }
+      } catch {
+        document.getElementById("admin-login-error").textContent = "Verbinding mislukt.";
+      }
+    }
+
+    // Excel bestand kiezen
+    document.getElementById("admin-excel-file").addEventListener("change", function () {
+      const f = this.files[0];
+      if (f) {
+        document.getElementById("admin-excel-name").textContent = f.name;
+        document.getElementById("admin-parse-btn").disabled = false;
+        document.getElementById("admin-matrix-upload-btn").disabled = true;
+        document.getElementById("admin-matrix-preview").textContent = "";
+        document.getElementById("admin-matrix-status").textContent = "";
+        adminParsedMatrix = null;
+      }
+    });
+
+    // Excel verwerken met SheetJS
+    document.getElementById("admin-parse-btn").addEventListener("click", async () => {
+      const file = document.getElementById("admin-excel-file").files[0];
+      const component = document.getElementById("admin-component").value;
+      if (!file) return;
+      const preview = document.getElementById("admin-matrix-preview");
+      preview.textContent = "Bezig met verwerken…";
+      document.getElementById("admin-matrix-upload-btn").disabled = true;
+      try {
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: "array" });
+        const ws = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+        const matrix = adminParseExcel(rows, component);
+
+        // Bestaande afbeeldingskoppelingen overnemen uit huidige KV-matrix
+        try {
+          const existing = await fetch(`${TS_API}/matrix?component=${component}&language=nl`);
+          if (existing.ok) {
+            const existingMatrix = await existing.json();
+            for (const code of Object.keys(matrix.causes)) {
+              if (existingMatrix.causes[code]?.images) {
+                matrix.causes[code].images = existingMatrix.causes[code].images;
+              }
+            }
+          }
+        } catch { /* niet-kritiek */ }
+
+        adminParsedMatrix = matrix;
+        const nLinks  = Object.values(matrix.causes).filter(c => c.link).length;
+        const nImages = Object.values(matrix.causes).filter(c => c.images?.length).length;
+        preview.textContent = `✓ ${matrix.complaints.length} klachten · ${Object.keys(matrix.causes).length} oorzaken · ${nLinks} links · ${nImages} met afbeeldingen`;
+        document.getElementById("admin-matrix-upload-btn").disabled = false;
+      } catch (err) {
+        preview.textContent = `Fout bij verwerken: ${err.message}`;
+      }
+    });
+
+    function adminParseExcel(rows, componentName) {
+      const dataRows = rows.slice(1);
+      const required_info = [], complaints = [], causes = {};
+      const seenRI = new Set(), seenC = new Set();
+      for (const row of dataRows) {
+        const a = String(row[0] || "").trim();
+        const b = String(row[1] || "").trim();
+        if (a && b && !seenRI.has(a)) {
+          seenRI.add(a);
+          required_info.push({
+            code: a,
+            vraag: b,
+            opties: String(row[2] || "").split(",").map(s => s.trim()).filter(Boolean),
+          });
+        }
+        const d = String(row[3] || "").trim();
+        const e = String(row[4] || "").trim();
+        if (d && e && !seenC.has(d)) {
+          seenC.add(d);
+          complaints.push({
+            code: d,
+            klacht: e,
+            oorzaken_volgorde: String(row[5] || "").split(",").map(s => s.trim()).filter(Boolean),
+          });
+        }
+        const g = String(row[6] || "").trim();
+        const j = String(row[9] || "").trim();
+        if (g && j && !causes[g]) {
+          const entry = {
+            casambi: String(row[7] || "").trim().toLowerCase() === "ja",
+            somfy:   String(row[8] || "").trim().toLowerCase() === "ja",
+            omschrijving: j,
+            oplossing:    String(row[10] || "").trim(),
+          };
+          const link = String(row[11] || "").trim();
+          if (link) entry.link = link;
+          causes[g] = entry;
+        }
+      }
+      return { component: componentName.toLowerCase(), required_info, complaints, causes };
+    }
+
+    // Matrix uploaden naar KV
+    document.getElementById("admin-matrix-upload-btn").addEventListener("click", async () => {
+      if (!adminParsedMatrix) return;
+      const statusEl = document.getElementById("admin-matrix-status");
+      statusEl.textContent = "Bezig met uploaden…";
+      try {
+        const res = await fetch(`${TS_API}/admin/matrix`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": adminPassword },
+          body: JSON.stringify(adminParsedMatrix),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          statusEl.innerHTML = `<span style="color:green">✓ ${data.key} bijgewerkt (${data.complaints} klachten, ${data.causes} oorzaken)</span>`;
+        } else {
+          statusEl.innerHTML = `<span style="color:#c53030">Fout: ${data.error}</span>`;
+        }
+      } catch (err) {
+        statusEl.innerHTML = `<span style="color:#c53030">Fout: ${err.message}</span>`;
+      }
+    });
+
+    // PNG bestanden kiezen
+    document.getElementById("admin-png-files").addEventListener("change", function () {
+      adminPngFiles = Array.from(this.files);
+      const listEl = document.getElementById("admin-png-list");
+      const btn    = document.getElementById("admin-png-upload-btn");
+      if (adminPngFiles.length) {
+        listEl.textContent = adminPngFiles.map(f => f.name).join(", ");
+        btn.disabled = false;
+        btn.textContent = `Uploaden (${adminPngFiles.length} bestand${adminPngFiles.length > 1 ? "en" : ""})`;
+      } else {
+        listEl.textContent = "";
+        btn.disabled = true;
+        btn.textContent = "Uploaden";
+      }
+      document.getElementById("admin-png-status").textContent = "";
+    });
+
+    // PNG's uploaden naar KV
+    document.getElementById("admin-png-upload-btn").addEventListener("click", async () => {
+      if (!adminPngFiles.length) return;
+      const statusEl = document.getElementById("admin-png-status");
+      statusEl.textContent = "Bezig met uploaden…";
+      const results = [];
+      for (const file of adminPngFiles) {
+        try {
+          const buf = await file.arrayBuffer();
+          const res = await fetch(`${TS_API}/admin/png`, {
+            method: "POST",
+            headers: { "Content-Type": "image/png", "X-Admin-Password": adminPassword, "X-Filename": file.name },
+            body: buf,
+          });
+          const d = await res.json();
+          if (res.ok) results.push({ name: file.name, ok: true,  info: `${Math.round(d.bytes / 1024)} KB` });
+          else        results.push({ name: file.name, ok: false, info: d.error || res.status });
+        } catch (err) {
+          results.push({ name: file.name, ok: false, info: err.message });
+        }
+      }
+      const okCount = results.filter(r => r.ok).length;
+      statusEl.innerHTML = results.map(r =>
+        `<div style="color:${r.ok ? "green" : "#c53030"}">${r.ok ? "✓" : "✗"} ${r.name} <span style="color:var(--muted)">(${r.info})</span></div>`
+      ).join("") + `<div style="margin-top:6px;font-weight:600">${okCount} van ${results.length} gelukt</div>`;
     });
 
     // ── Reset knop: ook troubleshoot resetten ────────────────────────────────
