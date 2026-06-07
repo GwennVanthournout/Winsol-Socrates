@@ -12,7 +12,7 @@
 
       <!-- HERO -->
       <header class="hero" role="banner" aria-label="Winsol SO!Crates header">
-        <h1 class="hero__title">Winsol SO!Crates (02-06-'26)</h1>
+        <h1 class="hero__title">Winsol SO!Crates (07-06-'26)</h1>
         <img class="hero__logo" src="SO-Crates_Logo_mini.png" alt="SO!Crates logo" />
       </header>
 
@@ -385,15 +385,19 @@
         const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
         const matrix = adminParseExcel(rows, component);
 
-        // Bestaande afbeeldingskoppelingen overnemen uit huidige KV-matrix
+        // Auto-koppel PNG's op basis van naamconventie (bijv. LC01-01.png → oorzaak LC01)
         try {
-          const existing = await fetch(`${TS_API}/matrix?component=${component}&language=nl`);
-          if (existing.ok) {
-            const existingMatrix = await existing.json();
+          const pngRes = await fetch(`${TS_API}/admin/png-list`, {
+            headers: { "X-Admin-Password": adminPassword }
+          });
+          if (pngRes.ok) {
+            const { files } = await pngRes.json();
             for (const code of Object.keys(matrix.causes)) {
-              if (existingMatrix.causes[code]?.images) {
-                matrix.causes[code].images = existingMatrix.causes[code].images;
-              }
+              const matching = files
+                .filter(f => f.toLowerCase().startsWith(code.toLowerCase() + "-") ||
+                             f.toLowerCase().startsWith(code.toLowerCase() + "."))
+                .sort();
+              if (matching.length) matrix.causes[code].images = matching;
             }
           }
         } catch { /* niet-kritiek */ }
@@ -504,7 +508,7 @@
             body: buf,
           });
           const d = await res.json();
-          if (res.ok) results.push({ name: file.name, ok: true,  info: `${Math.round(d.bytes / 1024)} KB` });
+          if (res.ok) results.push({ name: file.name, ok: true,  info: `${Math.round(d.bytes / 1024)} KB${d.matrixPatched ? " · matrix bijgewerkt" : ""}` });
           else        results.push({ name: file.name, ok: false, info: d.error || res.status });
         } catch (err) {
           results.push({ name: file.name, ok: false, info: err.message });
