@@ -324,7 +324,23 @@
     }
     tsUpdateTabLabel(); // initieel instellen
 
-    document.getElementById("ts-component").addEventListener("change", tsLoad);
+    // Component select: change én herselect van dezelfde waarde triggeren tsLoad
+    (function() {
+      const sel = document.getElementById("ts-component");
+      let _prev = "";
+      sel.addEventListener("mousedown", function() {
+        _prev = this.value;
+        this.value = ""; // zodat change altijd vuurt, ook bij dezelfde keuze
+      });
+      sel.addEventListener("change", function() {
+        _prev = "";
+        tsLoad();
+      });
+      sel.addEventListener("blur", function() {
+        if (!this.value && _prev) this.value = _prev; // herstel bij Escape/klik-buiten
+        _prev = "";
+      });
+    })();
     document.getElementById("language").addEventListener("change", () => {
       tsUpdateTabLabel();
       if (document.getElementById("ts-component").value) tsLoad();
